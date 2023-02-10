@@ -1,0 +1,80 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"submodule/OpenDP/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 106,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 107,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 108,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "include",
+			"paths" : 
+			[
+				"submodule/OpenDP/src/circuit.h",
+				"submodule/OpenDP/src/mymeasure.h"
+			],
+			"type" : "file"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "Unspecified",
+			"destination" : "bin",
+			"paths" : 
+			[
+				"submodule/OpenDP/opendp"
+			],
+			"targetId" : "opendp::@640d725eb95856d54415",
+			"targetIndex" : 11,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 3,
+			"component" : "Unspecified",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"submodule/OpenDP/libopendp.a"
+			],
+			"targetId" : "opendplib::@640d725eb95856d54415",
+			"targetIndex" : 12,
+			"type" : "target"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "submodule/OpenDP",
+		"source" : "submodule/OpenDP"
+	}
+}

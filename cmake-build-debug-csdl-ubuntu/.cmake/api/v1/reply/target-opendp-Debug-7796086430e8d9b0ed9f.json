@@ -1,0 +1,348 @@
+{
+	"artifacts" : 
+	[
+		{
+			"path" : "submodule/OpenDP/opendp"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_executable",
+			"install",
+			"target_link_libraries",
+			"add_dependencies",
+			"include_directories"
+		],
+		"files" : 
+		[
+			"submodule/OpenDP/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 81,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 107,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 85,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 97,
+				"parent" : 0
+			},
+			{
+				"command" : 3,
+				"file" : 0,
+				"line" : 98,
+				"parent" : 0
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 53,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-O3 -g -ggdb -fdiagnostics-color=always"
+				},
+				{
+					"fragment" : "-std=c++11"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clefzlib"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/def"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/defzlib"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/cdef"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/cdefzlib"
+				}
+			],
+			"language" : "CXX",
+			"languageStandard" : 
+			{
+				"backtraces" : 
+				[
+					1
+				],
+				"standard" : "11"
+			},
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 4,
+			"id" : "def::@2e12e4e7d268e9fade88"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "defzlib::@2e12e4e7d268e9fade88"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "cdef::@2e12e4e7d268e9fade88"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "cdefzlib::@2e12e4e7d268e9fade88"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "lef::@650d0f5d35f5c1d372ff"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "lefzlib::@650d0f5d35f5c1d372ff"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "clef::@650d0f5d35f5c1d372ff"
+		},
+		{
+			"backtrace" : 3,
+			"id" : "clefzlib::@650d0f5d35f5c1d372ff"
+		}
+	],
+	"id" : "opendp::@640d725eb95856d54415",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "bin"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"link" : 
+	{
+		"commandFragments" : 
+		[
+			{
+				"fragment" : "-O3 -g -ggdb",
+				"role" : "flags"
+			},
+			{
+				"fragment" : "-rdynamic",
+				"role" : "flags"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/lib/libdef.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/lib/libdefzlib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/lib/libcdef.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/lib/libcdefzlib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/liblef.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/liblefzlib.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/libclef.a",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 3,
+				"fragment" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/libclefzlib.a",
+				"role" : "libraries"
+			}
+		],
+		"language" : "CXX"
+	},
+	"name" : "opendp",
+	"nameOnDisk" : "opendp",
+	"paths" : 
+	{
+		"build" : "submodule/OpenDP",
+		"source" : "submodule/OpenDP"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1,
+				2,
+				3,
+				4,
+				5,
+				6,
+				7,
+				8,
+				9,
+				10,
+				11
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/assign.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/check_legal.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/circuit.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/mymeasure.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/parser.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/parser_helper.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/place.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/utility.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/defParser.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/lefParser.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/src/circuitParser.cpp",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "EXECUTABLE"
+}

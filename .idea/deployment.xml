@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" remoteFilesAllowedToDisappearOnAutoupload="false">
+    <serverData>
+      <paths name="CSDL-Ubuntu (2d3be0a8-9bc0-422a-92e2-ed4bb7a0ddca)">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/tmp/tmp.eyv3ldFFuv" local="$PROJECT_DIR$" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/cmake-build-debug-csdl-ubuntu" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

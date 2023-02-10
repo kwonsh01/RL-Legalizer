@@ -1,4 +1,4 @@
-#include "circuit.h"
+#include "RLDP.h"
 #include <string>
 #include <vector>
 
@@ -8,13 +8,10 @@ using std::vector;
 using std::cout;
 using std::endl;
 
-using opendp::circuit;
-using opendp::cell;
-using opendp::row;
-using opendp::pixel;
-using opendp::rect;
+using namespace opendp;
+using namespace RL_LEGALIZER;
 
-void circuit::read_files(std::string argv, int Gcell_grid_num) {
+void RLDP::read_files(std::string argv, int Gcell_grid_num) {
   Gcell_grid = Gcell_grid_num;
   vector<string> lefStor;
   string defLoc = "";

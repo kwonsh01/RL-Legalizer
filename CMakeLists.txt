@@ -8,7 +8,7 @@ set(SOURCES
         src/main.cpp
         src/RLDP.cpp)
 set(INCLUDE_DIRS
-        #${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/submodule/OpenDP/src
         )
 add_executable(RL_Legalizer ${SOURCES})

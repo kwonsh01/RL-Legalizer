@@ -1,8 +1,8 @@
 #include <iostream>
-#include "circuit.h"
+#include "RLDP.h"
 
 using namespace std;
-using opendp::circuit;
+using namespace RL_LEGALIZER;
 
 int main() {
 
@@ -17,7 +17,7 @@ int main() {
   CMeasure measure;
   measure.start_clock();
 
-  circuit ckt;
+  RLDP ckt;
 
   ckt.read_files(argv, 1);
   measure.stop_clock("Parser");

@@ -17,22 +17,22 @@ int main() {
   CMeasure measure;
   measure.start_clock();
 
-  RLDP ckt;
+  RLDP ckt, ckt0;
 
   ckt.read_files(argv, 1);
-  measure.stop_clock("Parser");
+  ckt0.copy_data(ckt);
 
   ckt.simple_placement(measure);
   ckt.calc_density_factor(4);
-
-  measure.stop_clock("All");
   ckt.write_def(ckt.out_def_name);
+  ckt.evaluation();
+  ckt.check_legality();
 
-  measure.print_clock();
+  ckt.copy_data(ckt0);
 
   ckt.evaluation();
-
   ckt.check_legality();
+
   cout << " - - - - - < Program END > - - - - - " << endl;
 
   return 0;

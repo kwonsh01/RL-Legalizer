@@ -11,7 +11,9 @@ using std::endl;
 using namespace opendp;
 using namespace RL_LEGALIZER;
 
-void circuit::read_files(std::string argv, int Gcell_grid_num) {
+RLDP::RLDP() : Gcell_grid(1), opendp::circuit() {}
+
+void RLDP::read_files(std::string argv, int Gcell_grid_num) {
   Gcell_grid = Gcell_grid_num;
   vector<string> lefStor;
   string defLoc = "";

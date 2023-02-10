@@ -1,6 +1,9 @@
 #include "RLDP.h"
 #include <string>
 #include <vector>
+#include <boost/geometry.hpp>
+#include <boost/geometry/geometries/polygon.hpp>
+#include <boost/geometry/geometries/adapted/boost_polygon.hpp>
 
 using std::string;
 using std::to_string;
@@ -11,7 +14,162 @@ using std::endl;
 using namespace opendp;
 using namespace RL_LEGALIZER;
 
-RLDP::RLDP() : Gcell_grid(1), opendp::circuit() {}
+bool Gcell_density_order(truffle &a, truffle &b){
+  if(a.gcell_density > b.gcell_density)
+    return true;
+  else
+    return false;
+}
+
+vector< vector<instance> > RLDP::get_Cell(){
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    vector<instance> temp;
+    cell_list_isnotFixed.push_back(temp);
+  }
+
+  int x, y;
+  int row = this->ty / Gcell_grid;
+  int col = this->rx / Gcell_grid;
+  total_cell = 0;
+
+  for(int i = 0; i < cells.size(); i++) {
+    if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced) continue;
+
+    x = cells[i].init_x_coord / col;
+    y = cells[i].init_y_coord / row;
+
+    int gcell_id = x + y * Gcell_grid;
+
+    total_cell++;
+    cell_list_isnotFixed[gcell_id].emplace_back(&(cells[i]), gcell_id);
+  }
+
+  return cell_list_isnotFixed;
+}
+
+void RLDP::Gcell_init(){
+  int gcell_id = 0;
+
+  for(std::vector<instance> &instance_vector : cell_list_isnotFixed){
+    Gcell_density.emplace_back(gcell_id++, instance_vector.size(), 0);
+  }
+
+}
+
+std::vector<truffle> RLDP::get_Gcell(){
+  Gcell_init();
+  int gcell_id = 0, gcell_num = 0;
+
+  int row = this->ty / Gcell_grid;
+  int col = this->rx / Gcell_grid;
+
+  int *cell_density = new int[Gcell_grid * Gcell_grid];
+  int *macro_density = new int[Gcell_grid * Gcell_grid];
+
+  boost::polygon::rectangle_data<int> gcell_rect;
+  boost::polygon::rectangle_data<int> macro_rect;
+  boost::polygon::rectangle_data<int> ovl;
+
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    cell_density[i] = 0;
+    macro_density[i] = 0;
+  }
+
+  //density by macros
+  for(int i = 0; i < Gcell_grid; i++){
+    for(int j = 0; j < Gcell_grid; j++){
+      gcell_rect = boost::polygon::construct<boost::polygon::rectangle_data<int>>(j * col, i * row, (j + 1) * col, (i + 1) * row);
+      for(macro instance : macros){
+        macro_rect = boost::polygon::construct<boost::polygon::rectangle_data<int>>(instance.xOrig, instance.yOrig, instance.xOrig + instance.width, instance.yOrig + instance.height);
+        if(boost::geometry::overlaps(gcell_rect, macro_rect)){
+          ovl = boost::polygon::construct<boost::polygon::rectangle_data<int>>
+                                                                            (std::max(double(j * col), instance.xOrig), std::max(double(i * row), instance.yOrig), std::min(double((j + 1) * col), instance.xOrig + instance.width), std::min(double((i + 1) * row), instance.yOrig + instance.height));
+          macro_density[i * Gcell_grid + j]  += boost::geometry::area(ovl);
+        }
+      }
+    }
+  }
+
+  //density by cells
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    for(instance &Instance : cell_list_isnotFixed[i]){
+      if(Instance.gcell_id == i){
+        cell_density[i] += Instance.cell->height * Instance.cell->width;
+      }
+    }
+  }
+
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    Gcell_density[i].gcell_density = (macro_density[i] + cell_density[i])/1000;
+  }
+
+  delete[] cell_density;
+  delete[] macro_density;
+
+  sort(Gcell_density.begin(), Gcell_density.end(), Gcell_density_order);
+  // sort(cell_list_isnotFixed.begin(), cell_list_isnotFixed.end(), Cell_id_order);
+  return Gcell_density;
+}
+
+void RLDP::pre_placement() {
+  if(groups.size() > 0) {
+    // group_cell -> region assign
+    group_cell_region_assign();
+    cout << " group_cell_region_assign done .." << endl;
+  }
+  // non group cell -> sub region gen & assign
+  non_group_cell_region_assign();
+  cout << " non_group_cell_region_assign done .." << endl;
+  cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+
+  // pre placement out border ( Need region assign function previously )
+  if(groups.size() > 0) {
+    group_cell_pre_placement();
+    cout << " group_cell_pre_placement done .." << endl;
+    non_group_cell_pre_placement();
+    cout << " non_group_cell_pre_placement done .." << endl;
+    cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+  }
+
+  // naive method placement ( Multi -> single )
+  if(groups.size() > 0) {
+    group_cell_placement("init_coord");
+    cout << " group_cell_placement done .. " << endl;
+    for(int i = 0; i < groups.size(); i++) {
+      group* theGroup = &groups[i];
+      for(int j = 0; j < 3; j++) {
+        int count_a = group_refine(theGroup);
+        int count_b = group_annealing(theGroup);
+        if(count_a < 10 || count_b < 100) break;
+      }
+    }
+  }
+}
+
+void RLDP::place_oneCell(int gcell_id, int cell_idx){
+  cell* thecell = cell_list_isnotFixed[gcell_id][cell_idx].cell;
+  //cout << "Cell id is " << thecell->id << endl;
+
+  if(!thecell->isPlaced == true){
+    if(map_move(thecell, "init_coord") == false) {
+      if(shift_move(thecell, "init_coord") == false) {
+        cout << thecell->name << " -> move failed!" << endl;
+        //nomove = true;
+        cout << thecell->isPlaced << endl;
+      }
+    }
+    cell_list_isnotFixed[gcell_id][cell_idx].moveTry = true;
+  }
+
+  //feature update
+  thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
+
+  cout << cell_list_isnotFixed[gcell_id][cell_idx].cell->id << "'s cell_placement done .. " << endl;
+  // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+  return;
+}
+
+RLDP::RLDP() : Gcell_grid(1), total_cell(0), opendp::circuit() {}
 
 void RLDP::read_files(std::string argv, int Gcell_grid_num) {
   Gcell_grid = Gcell_grid_num;
@@ -319,3 +477,4 @@ void RLDP::copy_data(const circuit& copied){
   group_pixel_assign();
   init_large_cell_stor();
 }
+

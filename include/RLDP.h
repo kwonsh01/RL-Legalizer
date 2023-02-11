@@ -3,6 +3,7 @@
 
 #include "circuit.h"
 #include <iostream>
+#include <string>
 
 using namespace opendp;
 

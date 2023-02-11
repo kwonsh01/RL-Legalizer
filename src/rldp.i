@@ -1,15 +1,14 @@
 %module rldp
 %{
-#include "../submodule/OpenDP/src//circuit.h"
+#include "../submodule/OpenDP/src/circuit.h"
 #include "../include/RLDP.h"
 %}
 %{
 #define SWIG_PYTHON_EXTRA_NATIVE_CONTAINERS
 %}
-%include "std_string.i"
-%include "std_vector.i"
-%include "std_pair.i"
-%include "../submodule/OpenDP/src//circuit.h"
+%include <std_string.i>
+%include <std_vector.i>
+%include "../submodule/OpenDP/src/circuit.h"
 %include "../include/RLDP.h"
 
 %template(CellVector) std::vector< RL_LEGALIZER::instance >;

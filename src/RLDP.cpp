@@ -167,7 +167,7 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx){
 
 RLDP::RLDP() : Gcell_grid(1), total_cell(0), opendp::circuit() {}
 
-void RLDP::read_files(std::string argv, int Gcell_grid_num) {
+void RLDP::read_files(string argv, int Gcell_grid_num) {
   Gcell_grid = Gcell_grid_num;
   vector<string> lefStor;
   string defLoc = "";

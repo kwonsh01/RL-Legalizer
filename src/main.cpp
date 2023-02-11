@@ -15,24 +15,20 @@ int main() {
 //  string argv = "opendp -lef ../benchmarks/des_perf_a_md1/tech.lef -lef ../benchmarks/des_perf_a_md1/cells_modified.lef -def ../benchmarks/des_perf_a_md1/placed.def -cpu 4 -placement_constraints ../benchmarks/des_perf_a_md1/placement.constraints -output_def ../output/des_perf_a_md1_output.def";
   string argv = "opendp -lef ../benchmarks/gcd_nangate45/Nangate45_tech.lef -lef ../benchmarks/gcd_nangate45/Nangate45.lef -def ../benchmarks/gcd_nangate45/gcd_nangate45_global_place.def -cpu 4 -output_def ../output/gcd_nangate45_output.def";
 
-  RLDP ckt;
+  RLDP ckt, ckt_original;
 
   ckt.read_files(argv, 3);
-
-  ckt.pre_placement();
 
   std::vector< std::vector<instance> > Cells = ckt.get_Cell();
   std::vector<truffle> Gcells = ckt.get_Gcell();
 
-  for(int i = 0; i < Gcells.size(); i++){
-    cout << " GCell's id: " << Gcells[i].gcell_id << endl;
-    cout << "   GCell's cells_num: " << Gcells[i].stdcell_num << endl;
-    cout << "   GCell's density: " << Gcells[i].gcell_density << endl;
-  }
+  ckt.pre_placement();
 
   for(int i = 0; i < Cells.size(); i++){
     for(int j = 0; j < Cells[i].size(); j++){
+      cout << Cells[i][j].cell->isPlaced << endl;
       ckt.place_oneCell(i, j);
+      cout << Cells[i][j].cell->isPlaced << endl << endl;
     }
   }
 

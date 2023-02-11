@@ -4,6 +4,8 @@
 #include "circuit.h"
 #include <iostream>
 
+using namespace opendp;
+
 namespace RL_LEGALIZER{
 
   struct truffle{

@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/under_kcs20/EECE491/RL-Legalizer/submodule/OpenDP/module/lef/5.8-p027/lib/liblefzlib.a CMakeFiles/lefzlib.dir/lefzlib/lefzlib.cpp.o
+/usr/bin/ranlib /home/under_kcs20/EECE491/RL-Legalizer/submodule/OpenDP/module/lef/5.8-p027/lib/liblefzlib.a

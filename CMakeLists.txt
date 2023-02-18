@@ -9,9 +9,9 @@ include(${SWIG_USE_FILE})
 find_package (Python3 COMPONENTS Development)
 
 project(RL_Legalizer)
-#add_compile_options(-fPIC)
+add_compile_options(-fPIC)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(SOURCES
         #src/main.cpp
         src/RLDP.cpp)
@@ -25,7 +25,7 @@ set_source_files_properties(src/rldp.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(src/rldp.i PROPERTIES SWIG_FLAGS "-python")
 
 swig_add_library(RL_Legalizer
-        TYPE STATIC
+        TYPE SHARED
         LANGUAGE python
         SOURCES
         src/rldp.i

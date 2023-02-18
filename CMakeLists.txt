@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.24)
 find_package(SWIG REQUIRED)
 include(${SWIG_USE_FILE})
 
-find_package(Python3 REQUIRED COMPONENTS Development)
 #find_package(PythonLibs REQUIRED)
 #include_directories(${PYTHON_INCLUDE_PATH})
 #message(STATUS "PYTHON_INCLUDE_PATH: ${PYTHON_INCLUDE_PATH}")
 
+find_package (Python3 COMPONENTS Development)
+
 project(RL_Legalizer)
-add_compile_options(-fPIC)
+#add_compile_options(-fPIC)
 
 set(CMAKE_CXX_STANDARD 17)
 set(SOURCES
@@ -24,6 +25,7 @@ set_source_files_properties(src/rldp.i PROPERTIES CPLUSPLUS ON)
 set_source_files_properties(src/rldp.i PROPERTIES SWIG_FLAGS "-python")
 
 swig_add_library(RL_Legalizer
+        TYPE STATIC
         LANGUAGE python
         SOURCES
         src/rldp.i

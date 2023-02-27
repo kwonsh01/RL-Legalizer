@@ -48,6 +48,6 @@ namespace RL_LEGALIZER{
     std::vector<truffle> Gcell_density;
     std::vector< std::vector<instance> > cell_list_isnotFixed;
   };
-
 }
-#endif //RL_LEGALIZER_INCLUDE_RLDP_H_
+
+#endif RL_LEGALIZER_INCLUDE_RLDP_H_

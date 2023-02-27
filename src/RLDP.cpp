@@ -28,11 +28,11 @@ vector< vector<instance> > RLDP::get_Cell(){
   }
 
   int x, y;
-  int row = this->ty / Gcell_grid;
-  int col = this->rx / Gcell_grid;
+  int row = int(this->ty) / Gcell_grid;
+  int col = int(this->rx) / Gcell_grid;
   total_cell = 0;
-
-  for(int i = 0; i < cells.size(); i++) {
+  int movable_cell = cells.size();
+  for(int i = 0; i < movable_cell; i++) {
     if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced) continue;
 
     x = cells[i].init_x_coord / col;
@@ -58,10 +58,9 @@ void RLDP::Gcell_init(){
 
 std::vector<truffle> RLDP::get_Gcell(){
   Gcell_init();
-  int gcell_id = 0, gcell_num = 0;
 
-  int row = this->ty / Gcell_grid;
-  int col = this->rx / Gcell_grid;
+  int row = int(this->ty) / Gcell_grid;
+  int col = int(this->rx) / Gcell_grid;
 
   int *cell_density = new int[Gcell_grid * Gcell_grid];
   int *macro_density = new int[Gcell_grid * Gcell_grid];
@@ -94,7 +93,7 @@ std::vector<truffle> RLDP::get_Gcell(){
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
     for(instance &Instance : cell_list_isnotFixed[i]){
       if(Instance.gcell_id == i){
-        cell_density[i] += Instance.cell->height * Instance.cell->width;
+        cell_density[i] += int(Instance.cell->height) * int(Instance.cell->width);
       }
     }
   }
@@ -162,7 +161,6 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx){
   }
 
   // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
-  return;
 }
 
 RLDP::RLDP() : Gcell_grid(1), total_cell(0), opendp::circuit() {}
@@ -260,7 +258,7 @@ void RLDP::read_files(string argv, int Gcell_grid_num) {
   cout << "-------------------------------------------------------------------"
        << endl;
 
-  // read_def shuld after read_lef
+//  read_def shuld after read_lef
 //  read_def(defLoc, INIT);
 
   ReadDef(defLoc );
@@ -360,8 +358,6 @@ void RLDP::copy_data(const circuit& copied){
   cells = copied.cells;
 
   prevrows = copied.prevrows;
-
-//  cell_list_isnotFixed;
 
   int row_num = this->ty / this->rowHeight;
   int col = this->rx / this->wsite;

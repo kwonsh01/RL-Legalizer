@@ -248,6 +248,12 @@ void RLDP::copy_data(const circuit& copied){
   group_pixel_assign();
   init_large_cell_stor();
 
+  for(vector<instance>& theCell : cell_list_isnotFixed){
+    for(instance& cell : theCell){
+      cell.moveTry = false;
+    }
+  }
+
 }
 
 vector< vector<instance> >& RLDP::get_Cell(){
@@ -260,8 +266,8 @@ vector< vector<instance> >& RLDP::get_Cell(){
   int row = int(this->ty) / Gcell_grid;
   int col = int(this->rx) / Gcell_grid;
   total_cell = 0;
-  int movable_cell = cells.size();
-  for(int i = 0; i < movable_cell; i++) {
+
+  for(int i = 0; i < cells.size(); i++) {
     if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced) continue;
 
     x = cells[i].init_x_coord / col;

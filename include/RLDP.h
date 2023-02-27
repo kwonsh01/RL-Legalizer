@@ -26,28 +26,64 @@ namespace RL_LEGALIZER{
     bool moveTry;
     int gcell_id;
 
+    int get_x_coord(){
+      if(!cell->x_coord)
+        return cell->init_x_coord;
+      else
+        return cell->x_coord;
+    }
+    int get_y_coord(){
+      if(!cell->y_coord)
+        return cell->init_y_coord;
+      else
+        return cell->y_coord;
+    }
+    double get_width(){
+      return cell->width;
+    }
+    bool get_moveTry(){
+      return this->moveTry;
+    }
     instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};
     instance(opendp::cell *cell, int gcell_id) : cell(cell), moveTry(false), gcell_id(gcell_id) {};
   };
 
   class RLDP : public opendp::circuit {
+   private:
+    int placed_cell;
+    int placed_Gcell;
+    bool placement_fail;
+    int total_cell;
+    int Gcell_grid;
+    std::vector<truffle> Gcell_density;
+    std::vector< std::vector<instance> > cell_list_isnotFixed;
    public:
     RLDP();
     ~RLDP() = default;
     void read_files(std::string argv, int Gcell_grid_num);
     void copy_data(const circuit& copied);
-    std::vector< std::vector<instance> > get_Cell();
+
+    std::vector< std::vector<instance> >& get_Cell();
     void Gcell_init();
     std::vector<truffle> get_Gcell();
+
     void pre_placement();
     void place_oneCell(int runtime_gcell, int cell_idx);
 
-   private:
-    int total_cell;
-    int Gcell_grid;
-    std::vector<truffle> Gcell_density;
-    std::vector< std::vector<instance> > cell_list_isnotFixed;
+    double reward_calc();
+    double reward_calc_Gcell(int gcell_id);
+    double calc_HPWL();
+    double calc_avg_disp();
+
+    int get_Gcell_grid(){return this->Gcell_grid * this->Gcell_grid;}
+    int total_cell_num(){return this->total_cell;}
+    double get_die_rx(){return this->rx;}
+    double get_die_ty(){return this->ty;}
+    double get_die_rH(){return this->rowHeight;}
+
+    bool calc_done();
+    bool calc_Gcell_done(int runtime_gcell);
   };
 }
 
-#endif RL_LEGALIZER_INCLUDE_RLDP_H_
+#endif

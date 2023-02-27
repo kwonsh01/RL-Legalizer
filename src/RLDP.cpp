@@ -21,149 +21,7 @@ bool Gcell_density_order(truffle &a, truffle &b){
     return false;
 }
 
-vector< vector<instance> > RLDP::get_Cell(){
-  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    vector<instance> temp;
-    cell_list_isnotFixed.push_back(temp);
-  }
-
-  int x, y;
-  int row = int(this->ty) / Gcell_grid;
-  int col = int(this->rx) / Gcell_grid;
-  total_cell = 0;
-  int movable_cell = cells.size();
-  for(int i = 0; i < movable_cell; i++) {
-    if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced) continue;
-
-    x = cells[i].init_x_coord / col;
-    y = cells[i].init_y_coord / row;
-
-    int gcell_id = x + y * Gcell_grid;
-
-    total_cell++;
-    cell_list_isnotFixed[gcell_id].emplace_back(&(cells[i]), gcell_id);
-  }
-
-  return cell_list_isnotFixed;
-}
-
-void RLDP::Gcell_init(){
-  int gcell_id = 0;
-
-  for(std::vector<instance> &instance_vector : cell_list_isnotFixed){
-    Gcell_density.emplace_back(gcell_id++, instance_vector.size(), 0);
-  }
-
-}
-
-std::vector<truffle> RLDP::get_Gcell(){
-  Gcell_init();
-
-  int row = int(this->ty) / Gcell_grid;
-  int col = int(this->rx) / Gcell_grid;
-
-  int *cell_density = new int[Gcell_grid * Gcell_grid];
-  int *macro_density = new int[Gcell_grid * Gcell_grid];
-
-  boost::polygon::rectangle_data<int> gcell_rect;
-  boost::polygon::rectangle_data<int> macro_rect;
-  boost::polygon::rectangle_data<int> ovl;
-
-  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    cell_density[i] = 0;
-    macro_density[i] = 0;
-  }
-
-  //density by macros
-  for(int i = 0; i < Gcell_grid; i++){
-    for(int j = 0; j < Gcell_grid; j++){
-      gcell_rect = boost::polygon::construct<boost::polygon::rectangle_data<int>>(j * col, i * row, (j + 1) * col, (i + 1) * row);
-      for(macro instance : macros){
-        macro_rect = boost::polygon::construct<boost::polygon::rectangle_data<int>>(instance.xOrig, instance.yOrig, instance.xOrig + instance.width, instance.yOrig + instance.height);
-        if(boost::geometry::overlaps(gcell_rect, macro_rect)){
-          ovl = boost::polygon::construct<boost::polygon::rectangle_data<int>>
-                                                                            (std::max(double(j * col), instance.xOrig), std::max(double(i * row), instance.yOrig), std::min(double((j + 1) * col), instance.xOrig + instance.width), std::min(double((i + 1) * row), instance.yOrig + instance.height));
-          macro_density[i * Gcell_grid + j]  += boost::geometry::area(ovl);
-        }
-      }
-    }
-  }
-
-  //density by cells
-  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    for(instance &Instance : cell_list_isnotFixed[i]){
-      if(Instance.gcell_id == i){
-        cell_density[i] += int(Instance.cell->height) * int(Instance.cell->width);
-      }
-    }
-  }
-
-  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    Gcell_density[i].gcell_density = (macro_density[i] + cell_density[i])/1000;
-  }
-
-  delete[] cell_density;
-  delete[] macro_density;
-
-  sort(Gcell_density.begin(), Gcell_density.end(), Gcell_density_order);
-  // sort(cell_list_isnotFixed.begin(), cell_list_isnotFixed.end(), Cell_id_order);
-  return Gcell_density;
-}
-
-void RLDP::pre_placement() {
-  if(groups.size() > 0) {
-    // group_cell -> region assign
-    group_cell_region_assign();
-    cout << " group_cell_region_assign done .." << endl;
-  }
-  // non group cell -> sub region gen & assign
-  non_group_cell_region_assign();
-  cout << " non_group_cell_region_assign done .." << endl;
-  cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
-
-  // pre placement out border ( Need region assign function previously )
-  if(groups.size() > 0) {
-    group_cell_pre_placement();
-    cout << " group_cell_pre_placement done .." << endl;
-    non_group_cell_pre_placement();
-    cout << " non_group_cell_pre_placement done .." << endl;
-    cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
-  }
-
-  // naive method placement ( Multi -> single )
-  if(groups.size() > 0) {
-    group_cell_placement("init_coord");
-    cout << " group_cell_placement done .. " << endl;
-    for(int i = 0; i < groups.size(); i++) {
-      group* theGroup = &groups[i];
-      for(int j = 0; j < 3; j++) {
-        int count_a = group_refine(theGroup);
-        int count_b = group_annealing(theGroup);
-        if(count_a < 10 || count_b < 100) break;
-      }
-    }
-  }
-}
-
-void RLDP::place_oneCell(int gcell_id, int cell_idx){
-  cell* thecell = cell_list_isnotFixed[gcell_id][cell_idx].cell;
-  //cout << "Cell id is " << thecell->id << endl;
-
-  if(!thecell->isPlaced){
-    if(!map_move(thecell, "init_coord")) {
-      if(!shift_move(thecell, "init_coord")) {
-        cout << thecell->name << " -> move failed!" << endl;
-      }
-    }
-    cell_list_isnotFixed[gcell_id][cell_idx].moveTry = true;
-    thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
-    cout << cell_list_isnotFixed[gcell_id][cell_idx].cell->id << "'s cell_placement done .. " << endl;
-  }
-
-  // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
-}
-
-RLDP::RLDP() : Gcell_grid(1), total_cell(0), opendp::circuit() {}
+RLDP::RLDP() : placed_cell(0), placed_Gcell(0), placement_fail(false), total_cell(0), Gcell_grid(1), opendp::circuit() {}
 
 void RLDP::read_files(string argv, int Gcell_grid_num) {
   Gcell_grid = Gcell_grid_num;
@@ -392,3 +250,297 @@ void RLDP::copy_data(const circuit& copied){
 
 }
 
+vector< vector<instance> >& RLDP::get_Cell(){
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    vector<instance> temp;
+    cell_list_isnotFixed.push_back(temp);
+  }
+
+  int x, y;
+  int row = int(this->ty) / Gcell_grid;
+  int col = int(this->rx) / Gcell_grid;
+  total_cell = 0;
+  int movable_cell = cells.size();
+  for(int i = 0; i < movable_cell; i++) {
+    if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced) continue;
+
+    x = cells[i].init_x_coord / col;
+    y = cells[i].init_y_coord / row;
+
+    int gcell_id = x + y * Gcell_grid;
+
+    total_cell++;
+    cell_list_isnotFixed[gcell_id].emplace_back(&(cells[i]), gcell_id);
+  }
+
+  return cell_list_isnotFixed;
+}
+
+void RLDP::Gcell_init(){
+  int gcell_id = 0;
+
+  for(std::vector<instance> &instance_vector : cell_list_isnotFixed){
+    Gcell_density.emplace_back(gcell_id++, instance_vector.size(), 0);
+  }
+
+}
+
+std::vector<truffle> RLDP::get_Gcell(){
+  Gcell_init();
+
+  int row = int(this->ty) / Gcell_grid;
+  int col = int(this->rx) / Gcell_grid;
+
+  int *cell_density = new int[Gcell_grid * Gcell_grid];
+  int *macro_density = new int[Gcell_grid * Gcell_grid];
+
+  boost::polygon::rectangle_data<int> gcell_rect;
+  boost::polygon::rectangle_data<int> macro_rect;
+  boost::polygon::rectangle_data<int> ovl;
+
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    cell_density[i] = 0;
+    macro_density[i] = 0;
+  }
+
+  //density by macros
+  for(int i = 0; i < Gcell_grid; i++){
+    for(int j = 0; j < Gcell_grid; j++){
+      gcell_rect = boost::polygon::construct<boost::polygon::rectangle_data<int>>(j * col, i * row, (j + 1) * col, (i + 1) * row);
+      for(macro instance : macros){
+        macro_rect = boost::polygon::construct<boost::polygon::rectangle_data<int>>(instance.xOrig, instance.yOrig, instance.xOrig + instance.width, instance.yOrig + instance.height);
+        if(boost::geometry::overlaps(gcell_rect, macro_rect)){
+          ovl = boost::polygon::construct<boost::polygon::rectangle_data<int>>
+              (std::max(double(j * col), instance.xOrig), std::max(double(i * row), instance.yOrig), std::min(double((j + 1) * col), instance.xOrig + instance.width), std::min(double((i + 1) * row), instance.yOrig + instance.height));
+          macro_density[i * Gcell_grid + j]  += boost::geometry::area(ovl);
+        }
+      }
+    }
+  }
+
+  //density by cells
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    for(instance &Instance : cell_list_isnotFixed[i]){
+      if(Instance.gcell_id == i){
+        cell_density[i] += int(Instance.cell->height) * int(Instance.cell->width);
+      }
+    }
+  }
+
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    Gcell_density[i].gcell_density = (macro_density[i] + cell_density[i])/1000;
+  }
+
+  delete[] cell_density;
+  delete[] macro_density;
+
+  sort(Gcell_density.begin(), Gcell_density.end(), Gcell_density_order);
+  // sort(cell_list_isnotFixed.begin(), cell_list_isnotFixed.end(), Cell_id_order);
+  return Gcell_density;
+}
+
+void RLDP::pre_placement() {
+  if(groups.size() > 0) {
+    // group_cell -> region assign
+    group_cell_region_assign();
+    cout << " group_cell_region_assign done .." << endl;
+  }
+  // non group cell -> sub region gen & assign
+  non_group_cell_region_assign();
+  cout << " non_group_cell_region_assign done .." << endl;
+  cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+
+  // pre placement out border ( Need region assign function previously )
+  if(groups.size() > 0) {
+    group_cell_pre_placement();
+    cout << " group_cell_pre_placement done .." << endl;
+    non_group_cell_pre_placement();
+    cout << " non_group_cell_pre_placement done .." << endl;
+    cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+  }
+
+  // naive method placement ( Multi -> single )
+  if(groups.size() > 0) {
+    group_cell_placement("init_coord");
+    cout << " group_cell_placement done .. " << endl;
+    for(int i = 0; i < groups.size(); i++) {
+      group* theGroup = &groups[i];
+      for(int j = 0; j < 3; j++) {
+        int count_a = group_refine(theGroup);
+        int count_b = group_annealing(theGroup);
+        if(count_a < 10 || count_b < 100) break;
+      }
+    }
+  }
+}
+
+void RLDP::place_oneCell(int gcell_id, int cell_idx){
+  instance& theinstance = cell_list_isnotFixed[gcell_id][cell_idx];
+  cell* thecell = cell_list_isnotFixed[gcell_id][cell_idx].cell;
+
+  if(!theinstance.moveTry){
+    placed_cell++;
+    placed_Gcell++;
+    theinstance.moveTry = true;
+  }
+
+  if(!thecell->isPlaced){
+    if(!map_move(thecell, "init_coord")) {
+      if(!shift_move(thecell, "init_coord")) {
+        cout << thecell->name << " -> move failed!" << endl;
+      }
+    }
+    cell_list_isnotFixed[gcell_id][cell_idx].moveTry = true;
+    thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
+    cout << cell_list_isnotFixed[gcell_id][cell_idx].cell->id << "'s cell_placement done .. " << endl;
+  }
+
+  // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+}
+
+double RLDP::reward_calc(){
+  double avg_disp = 0;
+  double max_disp = 0;
+  double displacement = 0;
+  int count_displacement = 1;
+
+  for(int i = 0; i < cells.size(); i++){
+    cell* theCell = &cells[i];
+    if(theCell->isPlaced){
+      displacement = theCell->disp;
+      avg_disp += displacement;
+      if(displacement > max_disp){
+        max_disp = displacement;
+      }
+      count_displacement++;
+    }
+  }
+
+  avg_disp = avg_disp / count_displacement;
+
+  return (50 / (1 + avg_disp)) + (5 / (1 + max_disp));
+}
+
+double RLDP::reward_calc_Gcell(int gcell_id){
+  double avg_disp = 0;
+  double max_disp = 0;
+  double displacement = 0;
+  int count_displacement = 0;
+
+  if(placement_fail){
+    placement_fail = false;
+    return 99999;
+  }
+
+  for(instance theCell : cell_list_isnotFixed[gcell_id]){
+    if(theCell.cell->isPlaced){
+      displacement = theCell.cell->disp;
+      avg_disp += displacement;
+      if(displacement > max_disp){
+        max_disp = displacement;
+      }
+      count_displacement++;
+    }
+  }
+
+  avg_disp = avg_disp / count_displacement;
+  return (50 / (1 + avg_disp)) + (5 / (1 + max_disp));
+}
+
+double RLDP::calc_HPWL() {
+  double hpwl = 0;
+
+  double x_coord = 0;
+  double y_coord = 0;
+
+  for(int i = 0; i < nets.size(); i++) {
+    rect box;
+    net* theNet = &nets[i];
+    // cout << " net name : " << theNet->name << endl;
+    pin* source = &pins[theNet->source];
+
+    if(source->type == NONPIO_PIN) {
+      cell* theCell = &cells[source->owner];
+      if(!theCell->isPlaced) {
+        x_coord = theCell->init_x_coord;
+        y_coord = theCell->init_y_coord;
+      }
+      else {
+        x_coord = theCell->x_coord;
+        y_coord = theCell->y_coord;
+      }
+      box.xLL = box.xUR = x_coord + source->x_offset * DEFdist2Microns;
+      box.yLL = box.yUR = y_coord + source->y_offset * DEFdist2Microns;
+    }
+    else {
+      box.xLL = box.xUR = source->x_coord;
+      box.yLL = box.yUR = source->y_coord;
+    }
+
+    for(int j = 0; j < theNet->sinks.size(); j++) {
+      pin* sink = &pins[theNet->sinks[j]];
+      // cout << " sink name : " << sink->name << endl;
+      if(sink->type == NONPIO_PIN) {
+        cell* theCell = &cells[sink->owner];
+        // if(!theCell->moveTry) {
+        if(!theCell->isPlaced) {
+          x_coord = theCell->init_x_coord;
+          y_coord = theCell->init_y_coord;
+        }
+        else {
+          x_coord = theCell->x_coord;
+          y_coord = theCell->y_coord;
+        }
+        box.xLL = std::min(box.xLL, x_coord + sink->x_offset * DEFdist2Microns);
+        box.xUR = std::max(box.xUR, x_coord + sink->x_offset * DEFdist2Microns);
+        box.yLL = std::min(box.yLL, y_coord + sink->y_offset * DEFdist2Microns);
+        box.yUR = std::max(box.yUR, y_coord + sink->y_offset * DEFdist2Microns);
+      }
+      else {
+        box.xLL = std::min(box.xLL, sink->x_coord);
+        box.xUR = std::max(box.xUR, sink->x_coord);
+        box.yLL = std::min(box.yLL, sink->y_coord);
+        box.yUR = std::max(box.yUR, sink->y_coord);
+      }
+    }
+
+    double box_boundary = (box.xUR - box.xLL + box.yUR - box.yLL);
+
+    hpwl += box_boundary;
+  }
+  return hpwl / static_cast< double >(DEFdist2Microns);
+}
+
+double RLDP::calc_avg_disp(){
+  double avg_disp = 0;
+  int count_displacement = 0;
+
+  for(std::vector<instance> theCells : cell_list_isnotFixed){
+    for(instance& theCell : theCells){
+      if(theCell.cell->isPlaced){
+        avg_disp += theCell.cell->disp;
+        count_displacement++;
+      }
+    }
+  }
+
+  avg_disp /= count_displacement;
+
+  return avg_disp;
+}
+
+bool RLDP::calc_done(){
+  if(total_cell == placed_cell){
+    placed_cell = 0;
+    return true;
+  }
+  return false;
+}
+
+bool RLDP::calc_Gcell_done(int runtime_gcell){
+  if(Gcell_density[runtime_gcell].stdcell_num == placed_Gcell){
+    placed_Gcell = 0;
+    return true;
+  }
+  return false;
+}

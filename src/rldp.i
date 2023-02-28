@@ -1,4 +1,7 @@
 %module rldp
+
+%rename(propertys) property;
+
 %{
 #include "../submodule/OpenDP/src/circuit.h"
 #include "../include/RLDP.h"

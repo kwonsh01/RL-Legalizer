@@ -13,7 +13,7 @@
     $ make
 
 ### How To Execute
-    $ cd rldp
+    $ cd ../rldp
     $ python3 PPO.py
     $ cd data
     $ python3 data.py

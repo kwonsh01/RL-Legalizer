@@ -1,0 +1,274 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.24"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						2,
+						3
+					]
+				},
+				{
+					"build" : "submodule/OpenDP",
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodule.OpenDP-Debug-339d00fdbd1186ca0b4e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 1,
+					"source" : "submodule/OpenDP",
+					"targetIndexes" : 
+					[
+						12,
+						13
+					]
+				},
+				{
+					"build" : "submodule/OpenDP/module/def/5.8-p027",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodule.OpenDP.module.def.5.8-p027-Debug-bfd4855010adf5cc58e5.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "submodule/OpenDP/module/def/5.8-p027",
+					"targetIndexes" : 
+					[
+						0,
+						4,
+						5,
+						8,
+						9
+					]
+				},
+				{
+					"build" : "submodule/OpenDP/module/lef/5.8-p027",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-submodule.OpenDP.module.lef.5.8-p027-Debug-d486f48d6b8479960294.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "2.6"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 3,
+					"source" : "submodule/OpenDP/module/lef/5.8-p027",
+					"targetIndexes" : 
+					[
+						1,
+						6,
+						7,
+						10,
+						11
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1
+					],
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "RL_Legalizer",
+					"targetIndexes" : 
+					[
+						2,
+						3
+					]
+				},
+				{
+					"childIndexes" : 
+					[
+						2,
+						3
+					],
+					"directoryIndexes" : 
+					[
+						1
+					],
+					"name" : "OpenDP",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						12,
+						13
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "DEF_PARSER",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						0,
+						4,
+						5,
+						8,
+						9
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3
+					],
+					"name" : "LEF_PARSER",
+					"parentIndex" : 1,
+					"targetIndexes" : 
+					[
+						1,
+						6,
+						7,
+						10,
+						11
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 2,
+					"id" : "DefBisonTarget::@2e12e4e7d268e9fade88",
+					"jsonFile" : "target-DefBisonTarget-Debug-192c40604258f7e5addd.json",
+					"name" : "DefBisonTarget",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "LefBisonTarget::@650d0f5d35f5c1d372ff",
+					"jsonFile" : "target-LefBisonTarget-Debug-e9e812df8f012be269ec.json",
+					"name" : "LefBisonTarget",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "RL_Legalizer::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-RL_Legalizer-Debug-d907e9b2987cdf5b23e8.json",
+					"name" : "RL_Legalizer",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "RL_Legalizer_swig_compilation::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-RL_Legalizer_swig_compilation-Debug-87ad508a053b49160b13.json",
+					"name" : "RL_Legalizer_swig_compilation",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "cdef::@2e12e4e7d268e9fade88",
+					"jsonFile" : "target-cdef-Debug-f96c4c669dbc361f459a.json",
+					"name" : "cdef",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "cdefzlib::@2e12e4e7d268e9fade88",
+					"jsonFile" : "target-cdefzlib-Debug-683bf2a24655ad875b03.json",
+					"name" : "cdefzlib",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "clef::@650d0f5d35f5c1d372ff",
+					"jsonFile" : "target-clef-Debug-23e4aa52b589fbbfd174.json",
+					"name" : "clef",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "clefzlib::@650d0f5d35f5c1d372ff",
+					"jsonFile" : "target-clefzlib-Debug-6ac40bd4b48275f099c1.json",
+					"name" : "clefzlib",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "def::@2e12e4e7d268e9fade88",
+					"jsonFile" : "target-def-Debug-4d576b7645b760bf07c2.json",
+					"name" : "def",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "defzlib::@2e12e4e7d268e9fade88",
+					"jsonFile" : "target-defzlib-Debug-064381d5878945992b62.json",
+					"name" : "defzlib",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "lef::@650d0f5d35f5c1d372ff",
+					"jsonFile" : "target-lef-Debug-b6c985b6785df5aa1a50.json",
+					"name" : "lef",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 3,
+					"id" : "lefzlib::@650d0f5d35f5c1d372ff",
+					"jsonFile" : "target-lefzlib-Debug-6522b023a69e00123ab6.json",
+					"name" : "lefzlib",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "opendp::@640d725eb95856d54415",
+					"jsonFile" : "target-opendp-Debug-99f8e09115fac147d6ac.json",
+					"name" : "opendp",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 1,
+					"id" : "opendplib::@640d725eb95856d54415",
+					"jsonFile" : "target-opendplib-Debug-3166f743829f7300fc58.json",
+					"name" : "opendplib",
+					"projectIndex" : 1
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl-ubuntu",
+		"source" : "/home/intern_shkwon/tmp/tmp.eyv3ldFFuv"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 4
+	}
+}

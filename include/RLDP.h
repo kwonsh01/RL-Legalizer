@@ -22,12 +22,69 @@ namespace RL_LEGALIZER{
     bool moveTry;
     int gcell_id;
 
-    int get_x_coord();
-    int get_y_coord();
-    double get_width();
-    bool get_moveTry();
-    Instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};
-    Instance(opendp::cell *cell, int gcell_id) : cell(cell), moveTry(false), gcell_id(gcell_id) {};
+    int get_x_coord(){
+      if(!cell->x_coord)
+        return cell->init_x_coord;
+      else
+        return cell->x_coord;
+    }
+    int get_y_coord(){
+      if(!cell->y_coord)
+        return cell->init_y_coord;
+      else
+        return cell->y_coord;
+    }
+    double get_width(){
+      return cell->width;
+    }
+    bool get_moveTry(){
+      return this->moveTry;
+    }
+    double getGcellXcoord(int Gcell_grid, int rx){
+      int x_pre;
+      int col;
+      int shamt_x;
+      int x_new;
+
+      if(cell->isPlaced){
+        x_pre = cell->x_coord;
+      }
+      else{
+        x_pre = cell->init_x_coord;
+      }
+
+      col = rx / Gcell_grid;
+
+      shamt_x = gcell_id % Gcell_grid;
+
+      x_new = x_pre - shamt_x * col;
+
+      return double(x_new) / col;
+    }
+    double getGcellYcoord(int Gcell_grid, int ty){
+      int y_pre;
+      int row;
+      int shamt_y;
+      int y_new;
+
+      if(cell->isPlaced){
+        y_pre = cell->y_coord;
+      }
+      else{
+        y_pre = cell->init_y_coord;
+      }
+
+      row = ty / Gcell_grid;
+
+      shamt_y = gcell_id / Gcell_grid;
+
+      y_new = y_pre - shamt_y * row;
+
+      return double(y_new) / row;
+    }
+    
+    instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};
+    instance(opendp::cell *cell, int gcell_id) : cell(cell), moveTry(false), gcell_id(gcell_id) {};
   };
 
   class RLDP : public opendp::circuit {

@@ -24,6 +24,8 @@ eps_clip      = 0.2 # 0.1 ~ 0.3
 K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
 
+Gcell_grid_num = 5
+
 class PPO(nn.Module):
     def __init__(self):
         super(PPO, self).__init__()
@@ -121,8 +123,9 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
         isTried = j.get_moveTry()
-        x = j.get_x_coord() / rx
-        y = j.get_y_coord() / ty
+        x = j.getGcellXcoord(Gcell_grid_num, rx)
+        y = j.getGcellYcoord(Gcell_grid_num, ty)
+        
         width = j.get_width() / rH
         state.append([isTried, x, y, width])
     return state
@@ -130,8 +133,8 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
 def read_state_gcell_train(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
-        x = j.get_x_coord() / rx
-        y = j.get_y_coord() / ty
+        x = j.getGcellXcoord(Gcell_grid_num,rx)
+        y = j.getGcellYcoord(Gcell_grid_num, ty)
         width = j.get_width() / rH
         state.append([x, y, width])
     return state
@@ -171,7 +174,7 @@ def main():
     ckt = rldp.RLDP()
     ckt_original = rldp.RLDP()
 
-    ckt.read_files(argv, 5)
+    ckt.read_files(argv, Gcell_grid_num)
 
     Cell = ckt.get_Cell() #total_cell_vector
     Gcell = ckt.get_Gcell() #cell number at Gcells vector, [0]:gcell_id, [1]:stdcell_num, [2]:gcell_density

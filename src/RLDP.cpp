@@ -318,7 +318,7 @@ std::vector<truffle> RLDP::get_Gcell(){
         if(boost::geometry::overlaps(gcell_rect, macro_rect)){
           ovl = boost::polygon::construct<boost::polygon::rectangle_data<int>>
               (std::max(double(j * col), instance.xOrig), std::max(double(i * row), instance.yOrig), std::min(double((j + 1) * col), instance.xOrig + instance.width), std::min(double((i + 1) * row), instance.yOrig + instance.height));
-          macro_density[i * Gcell_grid + j]  += boost::geometry::area(ovl);
+          macro_density[i * Gcell_grid + j] += boost::geometry::area(ovl);
         }
       }
     }

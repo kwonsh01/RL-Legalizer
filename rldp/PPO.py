@@ -123,11 +123,8 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
         isTried = j.get_moveTry()
-        x = j.getGcellXcoord(Gcell_grid_num, int(rx))
-        y = j.getGcellYcoord(Gcell_grid_num, int(ty))
-        
-        #print(x)
-        #print(y)
+        x = j.getGcellXcoord(Gcell_grid_num, rx)
+        y = j.getGcellYcoord(Gcell_grid_num, ty)
         
         width = j.get_width() / rH
         state.append([isTried, x, y, width])
@@ -136,8 +133,8 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
 def read_state_gcell_train(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
-        x = j.getGcellXcoord(Gcell_grid_num, int(rx))
-        y = j.getGcellYcoord(Gcell_grid_num, int(ty))
+        x = j.getGcellXcoord(Gcell_grid_num,rx)
+        y = j.getGcellYcoord(Gcell_grid_num, ty)
         width = j.get_width() / rH
         state.append([x, y, width])
     return state

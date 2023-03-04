@@ -50,7 +50,12 @@ namespace RL_LEGALIZER{
       int shamt_x;
       int x_new;
 
-      x_pre = cell->x_coord;
+      if(cell->isPlaced){
+        x_pre = cell->x_coord;
+      }
+      else{
+        x_pre = cell->init_x_coord;
+      }
 
       col = rx / Gcell_grid;
 
@@ -58,8 +63,7 @@ namespace RL_LEGALIZER{
 
       x_new = x_pre - shamt_x * col;
 
-      return (x_pre == 0 ? 0 : double(x_new) / col);
-      //return shamt_x;
+      return double(x_new) / col;
     }
     double getGcellYcoord(int Gcell_grid, int ty){
       int y_pre;
@@ -67,7 +71,12 @@ namespace RL_LEGALIZER{
       int shamt_y;
       int y_new;
 
-      y_pre = cell->y_coord;
+      if(cell->isPlaced){
+        y_pre = cell->y_coord;
+      }
+      else{
+        y_pre = cell->init_y_coord;
+      }
 
       row = ty / Gcell_grid;
 
@@ -75,7 +84,7 @@ namespace RL_LEGALIZER{
 
       y_new = y_pre - shamt_y * row;
 
-      return (y_pre == 0 ? 0 : double(y_new) / row);
+      return double(y_new) / row;
     }
     
     instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};

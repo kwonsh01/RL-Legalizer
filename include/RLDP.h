@@ -14,38 +14,20 @@ namespace RL_LEGALIZER{
     int stdcell_num;
     int gcell_density;
     truffle() : gcell_id(-1), stdcell_num(0), gcell_density(0) {}
-    truffle(int x, int y, int z){
-      gcell_id = x;
-      stdcell_num = y;
-      gcell_density = z;
-    }
+    truffle(int x, int y, int z) : gcell_id(x), stdcell_num(y), gcell_density(z) {}
   };
 
-  struct instance {
+  struct Instance {
     opendp::cell *cell;
     bool moveTry;
     int gcell_id;
 
-    int get_x_coord(){
-      if(!cell->x_coord)
-        return cell->init_x_coord;
-      else
-        return cell->x_coord;
-    }
-    int get_y_coord(){
-      if(!cell->y_coord)
-        return cell->init_y_coord;
-      else
-        return cell->y_coord;
-    }
-    double get_width(){
-      return cell->width;
-    }
-    bool get_moveTry(){
-      return this->moveTry;
-    }
-    instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};
-    instance(opendp::cell *cell, int gcell_id) : cell(cell), moveTry(false), gcell_id(gcell_id) {};
+    int get_x_coord();
+    int get_y_coord();
+    double get_width();
+    bool get_moveTry();
+    Instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};
+    Instance(opendp::cell *cell, int gcell_id) : cell(cell), moveTry(false), gcell_id(gcell_id) {};
   };
 
   class RLDP : public opendp::circuit {
@@ -56,14 +38,14 @@ namespace RL_LEGALIZER{
     int total_cell;
     int Gcell_grid;
     std::vector<truffle> Gcell_density;
-    std::vector< std::vector<instance> > cell_list_isnotFixed;
+    std::vector< std::vector<Instance> > cell_list_isnotFixed;
    public:
     RLDP();
     ~RLDP() = default;
     void read_files(std::string argv, int Gcell_grid_num);
     void copy_data(const circuit& copied);
 
-    std::vector< std::vector<instance> >& get_Cell();
+    std::vector< std::vector<Instance> >& get_Cell();
     void Gcell_init();
     std::vector<truffle> get_Gcell();
 

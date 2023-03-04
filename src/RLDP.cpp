@@ -248,17 +248,18 @@ void RLDP::copy_data(const circuit& copied){
   group_pixel_assign();
   init_large_cell_stor();
 
-  for(vector<instance>& theCell : cell_list_isnotFixed){
-    for(instance& cell : theCell){
+  for(vector<Instance>& theCell : cell_list_isnotFixed){
+    for(Instance& cell : theCell){
       cell.moveTry = false;
     }
   }
 
 }
 
-vector< vector<instance> >& RLDP::get_Cell(){
+vector< vector<Instance> >& RLDP::get_Cell(){
+
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    vector<instance> temp;
+    vector<Instance> temp;
     cell_list_isnotFixed.push_back(temp);
   }
 
@@ -285,7 +286,7 @@ vector< vector<instance> >& RLDP::get_Cell(){
 void RLDP::Gcell_init(){
   int gcell_id = 0;
 
-  for(std::vector<instance> &instance_vector : cell_list_isnotFixed){
+  for(std::vector<Instance> &instance_vector : cell_list_isnotFixed){
     Gcell_density.emplace_back(gcell_id++, instance_vector.size(), 0);
   }
 
@@ -326,7 +327,7 @@ std::vector<truffle> RLDP::get_Gcell(){
 
   //density by cells
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    for(instance &Instance : cell_list_isnotFixed[i]){
+    for(Instance &Instance : cell_list_isnotFixed[i]){
       if(Instance.gcell_id == i){
         cell_density[i] += int(Instance.cell->height) * int(Instance.cell->width);
       }
@@ -381,7 +382,7 @@ void RLDP::pre_placement() {
 }
 
 void RLDP::place_oneCell(int gcell_id, int cell_idx){
-  instance& theinstance = cell_list_isnotFixed[gcell_id][cell_idx];
+  Instance& theinstance = cell_list_isnotFixed[gcell_id][cell_idx];
   cell* thecell = cell_list_isnotFixed[gcell_id][cell_idx].cell;
 
   if(!theinstance.moveTry){
@@ -438,7 +439,7 @@ double RLDP::reward_calc_Gcell(int gcell_id){
     return 99999;
   }
 
-  for(instance theCell : cell_list_isnotFixed[gcell_id]){
+  for(Instance theCell : cell_list_isnotFixed[gcell_id]){
     if(theCell.cell->isPlaced){
       displacement = theCell.cell->disp;
       avg_disp += displacement;
@@ -521,8 +522,8 @@ double RLDP::calc_avg_disp(){
   double avg_disp = 0;
   int count_displacement = 0;
 
-  for(std::vector<instance> theCells : cell_list_isnotFixed){
-    for(instance& theCell : theCells){
+  for(std::vector<Instance> theCells : cell_list_isnotFixed){
+    for(Instance& theCell : theCells){
       if(theCell.cell->isPlaced){
         avg_disp += theCell.cell->disp;
         count_displacement++;

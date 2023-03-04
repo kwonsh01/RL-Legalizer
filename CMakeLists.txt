@@ -11,7 +11,8 @@ add_compile_options(-fPIC)
 set(CMAKE_CXX_STANDARD 14)
 set(SOURCES
         #src/main.cpp
-        src/RLDP.cpp)
+        src/RLDP.cpp
+        src/Instance.cpp)
 set(INCLUDE_DIRS
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/submodule/OpenDP/src

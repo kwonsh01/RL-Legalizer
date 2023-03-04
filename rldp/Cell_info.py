@@ -12,9 +12,9 @@ if(len(sys.argv)) < 3:
 gcell_grid = int(sys.argv[1])
 
 if(int(sys.argv[2]) == 1):
-    argv = "opendp -lef ../benchmarks/gcd_nangate45/Nangate45_tech.lef -lef ../benchmarks/gcd_nangate45/Nangate45.lef -def ../benchmarks/gcd_nangate45/gcd_nangate45_global_place.def -cpu 8 -output_def gcd_nangate45_output.def"
+    argv = "opendp -lef benchmarks/gcd_nangate45/Nangate45_tech.lef -lef benchmarks/gcd_nangate45/Nangate45.lef -def benchmarks/gcd_nangate45/gcd_nangate45_global_place.def -cpu 8 -output_def gcd_nangate45_output.def"
 else:
-    argv = "opendp -lef ../benchmarks/des_perf_a_md1/tech.lef -lef ../benchmarks/des_perf_a_md1/cells_modified.lef -def ../benchmarks/des_perf_a_md1/placed.def -cpu 8 -placement_constraints ../benchmarks/des_perf_a_md1/placement.constraints -output_def des_perf_a_md1_output.def"
+    argv = "opendp -lef benchmarks/des_perf_a_md1/tech.lef -lef benchmarks/des_perf_a_md1/cells_modified.lef -def benchmarks/des_perf_a_md1/placed.def -cpu 8 -placement_constraints benchmarks/des_perf_a_md1/placement.constraints -output_def des_perf_a_md1_output.def"
 
 ckt = rldp.RLDP()
 ckt_original = rldp.RLDP()

@@ -277,7 +277,7 @@ vector< vector<Instance> >& RLDP::get_Cell(){
     int gcell_id = x + y * Gcell_grid;
 
     total_cell++;
-    cell_list_isnotFixed[gcell_id].emplace_back(instance(&(cells[i]), gcell_id));
+    cell_list_isnotFixed[gcell_id].emplace_back(&(cells[i]), gcell_id);
   }
 
   return cell_list_isnotFixed;
@@ -328,7 +328,7 @@ std::vector<truffle> RLDP::get_Gcell(){
   //density by cells
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
     for(Instance &Instance : cell_list_isnotFixed[i]){
-      if(Instance.gcell_id == i){
+      if(Instance.Gcell_id == i){
         cell_density[i] += int(Instance.cell->height) * int(Instance.cell->width);
       }
     }

@@ -4,7 +4,6 @@ import torch.nn.functional as F
 import torch.optim as optim
 from torch.distributions import Categorical
 import gc
-import numpy as np
 
 import rldp
 import time
@@ -123,8 +122,8 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
         isTried = j.get_moveTry()
-        x = j.getGcellXcoord(Gcell_grid_num, rx)
-        y = j.getGcellYcoord(Gcell_grid_num, ty)
+        x = j.get_GcellXcoord(Gcell_grid_num, rx)
+        y = j.get_GcellYcoord(Gcell_grid_num, ty)
         
         width = j.get_width() / rH
         state.append([isTried, x, y, width])
@@ -133,8 +132,8 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
 def read_state_gcell_train(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
-        x = j.getGcellXcoord(Gcell_grid_num,rx)
-        y = j.getGcellYcoord(Gcell_grid_num, ty)
+        x = j.get_GcellXcoord(Gcell_grid_num,rx)
+        y = j.get_GcellYcoord(Gcell_grid_num, ty)
         width = j.get_width() / rH
         state.append([x, y, width])
     return state
@@ -227,14 +226,14 @@ def main():
         score = 0.0
         stepN = 0
         done = False
-        runtime_gcell = 0 # gcell index using runtime
+        runtime_Gcell = 0 # gcell index using runtime
         hpwl_before = hpwl_init
 
         while not done:
             gcell_done = False
             placed_cell_num = 0
-            s = read_state_gcell(Cell, Gcell[runtime_gcell].gcell_id, rx, ty, rH)
-            s_train = read_state_gcell_train(Cell, Gcell[runtime_gcell].gcell_id, rx, ty, rH)
+            s = read_state_gcell(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
+            s_train = read_state_gcell_train(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
 
             while not gcell_done:
                 #step
@@ -274,30 +273,31 @@ def main():
                 a = a.item()
 
                 #placement and reward/done load
-                ckt.place_oneCell(Gcell[runtime_gcell].gcell_id, a)
+                ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
                 placed_cell_num = placed_cell_num + 1
                 stepN += 1
                 #ifdef DEBUG
                 inference_time_start += time.time() - a_time
                 #endif
 
-                # r = 50 * ckt.reward_calc_Gcell(Gcell[runtime_gcell].gcell_id)
-                # r = 500 * ckt.tteesstt(Gcell[runtime_gcell].gcell_id, a)
+                # r = 50 * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
+                # r = 500 * ckt.tteesstt(Gcell[runtime_Gcell].Gcell_id, a)
                 hpwl_after = ckt.calc_HPWL()
                 hpwl_delta = 5 *  (hpwl_after - hpwl_before)/hpwl_after
-                r = 100 * math.exp(-hpwl_delta) * ckt.reward_calc_Gcell(Gcell[runtime_gcell].gcell_id)
+                r = 100 * math.exp(-hpwl_delta) * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
                 hpwl_before = hpwl_after
                 print("\033[33m" + "reward: " + "\033[0m", r)
 
-                print("\033[32m" + "         placed_cell_num: ", placed_cell_num, "\033[0m")
+                print("\033[32m" + "         placed_Gcell_num: ", placed_cell_num, "\033[0m")
+                print("\033[32m" + "         stdcell_num_Gcell: ", Gcell[runtime_Gcell].stdcell_num, "\033[0m")
                 print("\033[32m" + "         stepN: ", stepN, "\033[0m")
-                print("\033[32m" + "         runtime_gcell: ", runtime_gcell, "\033[0m")
-                print("\033[32m" + "         stdcell_num_gcell: ", Gcell[runtime_gcell].stdcell_num, "\033[0m")
-                print("\033[32m" + "         gcell_id: ", Gcell[runtime_gcell].gcell_id, "\033[0m")
+                print("\033[32m" + "         total_cell_num: ", total_cell, "\033[0m")
+                print("\033[32m" + "         runtime_Gcell: ", runtime_Gcell, "\033[0m")
+                print("\033[32m" + "         Gcell_id: ", Gcell[runtime_Gcell].Gcell_id, "\033[0m")
 
                 #cellist reload and state update
-                s_prime = read_state_gcell(Cell, Gcell[runtime_gcell].gcell_id, rx, ty, rH)
-                s_prime_train = read_state_gcell_train(Cell, Gcell[runtime_gcell].gcell_id, rx, ty, rH)
+                s_prime = read_state_gcell(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
+                s_prime_train = read_state_gcell_train(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
 
                 model.put_data((s_train, a, r, s_prime_train, probf[a].item(), done))
 
@@ -306,7 +306,7 @@ def main():
 
                 score += r
 
-                gcell_done = ckt.calc_Gcell_done(runtime_gcell)
+                gcell_done = ckt.calc_Gcell_done(runtime_Gcell)
 
             #ifdef DEBUG
             t_time = time.time()
@@ -316,7 +316,7 @@ def main():
             train_time_start += time.time() - t_time
             #endif
 
-            runtime_gcell += 1
+            runtime_Gcell += 1
 
             done = ckt.calc_done()
 

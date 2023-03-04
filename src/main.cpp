@@ -19,7 +19,7 @@ int main() {
 
   ckt.read_files(argv, 3);
 
-  std::vector< std::vector<instance> > Cells = ckt.get_Cell();
+  std::vector< std::vector<Instance> > Cells = ckt.get_Cell();
   std::vector<truffle> Gcells = ckt.get_Gcell();
 
   ckt.pre_placement();

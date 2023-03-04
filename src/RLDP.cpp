@@ -276,7 +276,7 @@ vector< vector<instance> >& RLDP::get_Cell(){
     int gcell_id = x + y * Gcell_grid;
 
     total_cell++;
-    cell_list_isnotFixed[gcell_id].emplace_back(&(cells[i]), gcell_id);
+    cell_list_isnotFixed[gcell_id].emplace_back(instance(&(cells[i]), gcell_id));
   }
 
   return cell_list_isnotFixed;

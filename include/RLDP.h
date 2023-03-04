@@ -44,6 +44,40 @@ namespace RL_LEGALIZER{
     bool get_moveTry(){
       return this->moveTry;
     }
+    double getGcellXcoord(int Gcell_grid, int rx){
+      int x_pre;
+      int col;
+      int shamt_x;
+      int x_new;
+
+      x_pre = cell->x_coord;
+
+      col = rx / Gcell_grid;
+
+      shamt_x = gcell_id % Gcell_grid;
+
+      x_new = x_pre - shamt_x * col;
+
+      return (x_pre == 0 ? 0 : double(x_new) / col);
+      //return shamt_x;
+    }
+    double getGcellYcoord(int Gcell_grid, int ty){
+      int y_pre;
+      int row;
+      int shamt_y;
+      int y_new;
+
+      y_pre = cell->y_coord;
+
+      row = ty / Gcell_grid;
+
+      shamt_y = gcell_id / Gcell_grid;
+
+      y_new = y_pre - shamt_y * row;
+
+      return (y_pre == 0 ? 0 : double(y_new) / row);
+    }
+    
     instance() : cell(nullptr), moveTry(false), gcell_id(-1) {};
     instance(opendp::cell *cell, int gcell_id) : cell(cell), moveTry(false), gcell_id(gcell_id) {};
   };

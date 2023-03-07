@@ -44,7 +44,7 @@ namespace RL_LEGALIZER{
     RLDP();
     ~RLDP() = default;
     void read_files(std::string argv, int Gcell_grid_num);
-    void copy_data(const circuit& copied);
+    void copy_data(const RLDP& copied);
 
     std::vector< std::vector<Instance> >& get_Cell();
     void Gcell_init();
@@ -52,6 +52,7 @@ namespace RL_LEGALIZER{
 
     void pre_placement();
     void place_oneCell(int runtime_gcell, int cell_idx);
+    void place_oneCell(int cell_idx);
 
     double reward_calc();
     double reward_calc_Gcell(int gcell_id);
@@ -66,6 +67,8 @@ namespace RL_LEGALIZER{
 
     bool calc_done();
     bool calc_Gcell_done(int runtime_gcell);
+
+    void SA(const RLDP& copied, std::vector<int> action_list);
   };
 }
 

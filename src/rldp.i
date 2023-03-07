@@ -14,6 +14,7 @@
 %include "../submodule/OpenDP/src/circuit.h"
 %include "../include/RLDP.h"
 
+%template(IntVector) std::vector< int >;
 %template(CellVector) std::vector< RL_LEGALIZER::Instance >;
 %template(CellVectorVector) std::vector< std::vector< RL_LEGALIZER::Instance > >;
 %template(TruffleVector) std::vector< RL_LEGALIZER::truffle >;

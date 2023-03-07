@@ -191,6 +191,7 @@ def main():
 
     print_interval = 1
 
+    action_list = rldp.IntVector()
     reward_arr = []
     score_arr = []
     hpwl_arr = []
@@ -272,6 +273,8 @@ def main():
                 a = a.sample()
                 a = a.item()
 
+                action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
+
                 #placement and reward/done load
                 ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
                 placed_cell_num = placed_cell_num + 1
@@ -347,6 +350,11 @@ def main():
     ckt.calc_density_factor(4)
     ckt.evaluation()
     ckt.check_legality()
+
+    # SA
+    ckt.SA(ckt_original, action_list)
+
+
     ckt.write_def("output/"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
     print("data: ", output)
 
@@ -377,7 +385,8 @@ if __name__ == '__main__':
     if is_cuda:
         gc.collect()
         torch.cuda.empty_cache()
-        device = torch.device("cuda:1")
+        device = torch.device("cpu")
+    # device = torch.device("cuda:1")
         print("GPU is available")
     else:
         device = torch.device("cpu")

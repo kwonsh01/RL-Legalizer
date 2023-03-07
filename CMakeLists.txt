@@ -9,6 +9,9 @@ find_package (Python3 COMPONENTS Development)
 add_compile_options(-fPIC)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "-O3")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -ggdb")
+
 set(SOURCES
         #src/main.cpp
         src/RLDP.cpp

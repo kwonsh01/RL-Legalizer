@@ -1,6 +1,7 @@
 #include "RLDP.h"
 #include <string>
 #include <vector>
+#include <random>
 #include <boost/geometry.hpp>
 #include <boost/geometry/geometries/polygon.hpp>
 #include <boost/geometry/geometries/adapted/boost_polygon.hpp>
@@ -204,7 +205,7 @@ void RLDP::read_files(string argv, int Gcell_grid_num) {
   return;
 }
 
-void RLDP::copy_data(const circuit& copied){
+void RLDP::copy_data(const RLDP& copied){
   rowHeight = copied.rowHeight;
   rx = copied.rx;
   ty = copied.ty;
@@ -350,20 +351,20 @@ void RLDP::pre_placement() {
   if(groups.size() > 0) {
     // group_cell -> region assign
     group_cell_region_assign();
-    cout << " group_cell_region_assign done .." << endl;
+//    cout << " group_cell_region_assign done .." << endl;
   }
   // non group cell -> sub region gen & assign
   non_group_cell_region_assign();
-  cout << " non_group_cell_region_assign done .." << endl;
-  cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+//  cout << " non_group_cell_region_assign done .." << endl;
+//  cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
 
   // pre placement out border ( Need region assign function previously )
   if(groups.size() > 0) {
     group_cell_pre_placement();
-    cout << " group_cell_pre_placement done .." << endl;
+//    cout << " group_cell_pre_placement done .." << endl;
     non_group_cell_pre_placement();
-    cout << " non_group_cell_pre_placement done .." << endl;
-    cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+//    cout << " non_group_cell_pre_placement done .." << endl;
+//    cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
   }
 
   // naive method placement ( Multi -> single )
@@ -403,6 +404,20 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx){
   }
 
   // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+}
+
+void RLDP::place_oneCell(int cell_idx){
+  cell* thecell = &this->cells[cell_idx];
+
+  if(!thecell->isPlaced){
+    if(!map_move(thecell, "init_coord")) {
+      if(!shift_move(thecell, "init_coord")) {
+        cout << thecell->name << " -> move failed!" << endl;
+      }
+    }
+    thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
+  }
+
 }
 
 double RLDP::reward_calc(){
@@ -550,4 +565,59 @@ bool RLDP::calc_Gcell_done(int runtime_gcell){
     return true;
   }
   return false;
+}
+
+void RLDP::SA(const RLDP& copied, std::vector<int> action_list){
+  int i, j;
+  double temp_rand = 1.0;
+  double before_hpwl = 0.0, after_hpwl = 0.0;
+
+  std::random_device rd;
+  std::mt19937 gen(rd());
+  std::uniform_int_distribution<int> prob_int(0, total_cell - 1);
+  std::uniform_real_distribution<double> prob_double(0.0, 1.0);
+
+  before_hpwl = this->calc_HPWL();
+  after_hpwl = before_hpwl;
+
+  for(int iter = 0; iter < total_cell; iter++){
+    cout << "Iter: " << iter << endl;
+    cout << " HPWL: " << after_hpwl << endl;
+
+    before_hpwl = after_hpwl;
+
+    this->copy_data(copied);
+    this->pre_placement();
+
+    i = prob_int(gen);
+    j = prob_int(gen);
+
+    int temp = action_list[i];
+    action_list[i] = action_list[j];
+    action_list[j] = temp;
+
+    for(int a : action_list){
+      this->place_oneCell(a);
+    }
+
+    after_hpwl = this->calc_HPWL();
+
+    if (after_hpwl > before_hpwl) {
+      double delta = 500 * (after_hpwl-before_hpwl) / before_hpwl;
+
+      if(prob_double(gen) < exp(-delta/temp_rand)) continue;
+      else{
+        temp = action_list[i];
+        action_list[i] = action_list[j];
+        action_list[j] = temp;
+        after_hpwl = before_hpwl;
+      }
+    }
+
+    if(temp_rand > 0.01)
+      temp_rand -= 0.01;
+  }
+  this->calc_density_factor(4);
+  this->evaluation();
+  this->check_legality();
 }

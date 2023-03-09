@@ -20,6 +20,7 @@ ckt = rldp.RLDP()
 ckt_original = rldp.RLDP()
 
 ckt.read_files(argv, gcell_grid)
+
 Cell = ckt.get_Cell()
 Gcell = ckt.get_Gcell()
 x = 0
@@ -30,17 +31,14 @@ for i in Cell:
     x += 1
     for j in i:
         a = '%-10s' % str(j.cell.id)
-        b = '%-10s' % str(j.gcell_id)
+        b = '%-10s' % str(j.Gcell_id)
         print("    Cell_id: ", a, "Gcell_id: ", b)
 
 print()
 print("Gcell size: ", Gcell.size())
 print()
 for i in (Gcell):
-    a = '%-10s' % str(i.gcell_id)
+    a = '%-10s' % str(i.Gcell_id)
     b = '%-10s' % str(i.stdcell_num)
-    c = '%-10s' % str(i.gcell_density)
+    c = '%-10s' % str(i.Gcell_density)
     print("    Gcell_id: ", a, "Stdcell_num: ", b, "Gcell_density: ", c)
-
-# for i in (Cell):
-#     print(i.gcell_id)

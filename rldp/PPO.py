@@ -132,7 +132,7 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
 def read_state_gcell_train(Cell, gcell_id, rx, ty, rH):
     state = []
     for j in (Cell[gcell_id]):
-        x = j.get_GcellXcoord(Gcell_grid_num,rx)
+        x = j.get_GcellXcoord(Gcell_grid_num, rx)
         y = j.get_GcellYcoord(Gcell_grid_num, ty)
         width = j.get_width() / rH
         state.append([x, y, width])
@@ -205,12 +205,13 @@ def main():
     n_episode = 0
     howLong = int(input("How Long? (min)"))
     timeUp = False
+    END = False
     start = time.time()
 
     hpwl_init = ckt.HPWL("INIT")
     hpwl_before = hpwl_init
 
-    while not timeUp:
+    while not END:
         print("[TRAIN] Start New Episode!")
         print("[TRAIN] EPISODE #",n_episode)
         epi_time_start = time.time()
@@ -273,7 +274,8 @@ def main():
                 a = a.sample()
                 a = a.item()
 
-                action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
+                if timeUp:
+                    action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
 
                 #placement and reward/done load
                 ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
@@ -283,14 +285,14 @@ def main():
                 inference_time_start += time.time() - a_time
                 #endif
 
-                # r = 50 * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
-                # r = 500 * ckt.tteesstt(Gcell[runtime_Gcell].Gcell_id, a)
-                hpwl_after = ckt.calc_HPWL()
-                hpwl_delta = 5 *  (hpwl_after - hpwl_before)/hpwl_after
-                r = 100 * math.exp(-hpwl_delta) * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
-                hpwl_before = hpwl_after
-                print("\033[33m" + "reward: " + "\033[0m", r)
+                r = 100 * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
+                # hpwl_after = ckt.calc_HPWL()
+                # hpwl_delta = 5 *  (hpwl_after - hpwl_before)/hpwl_after
+                # r = 100 * math.exp(-hpwl_delta) * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
+                # hpwl_before = hpwl_after
 
+                print("\033[31m" + "Episode: " + "\033[0m", n_episode)
+                print("\033[33m" + "reward: " + "\033[0m", r)
                 print("\033[32m" + "         placed_Gcell_num: ", placed_cell_num, "\033[0m")
                 print("\033[32m" + "         stdcell_num_Gcell: ", Gcell[runtime_Gcell].stdcell_num, "\033[0m")
                 print("\033[32m" + "         stepN: ", stepN, "\033[0m")
@@ -336,6 +338,8 @@ def main():
 
         print("# of episode :{}, avg score : {:.1f}".format(n_episode, score/print_interval))
 
+        if timeUp:
+            END = True
         if(time.time() - start) > howLong * 60:
             timeUp = True
         else:
@@ -346,10 +350,6 @@ def main():
     end = time.time()
     print("Execute time: ", end-start, "[s]")
     print("Episode: ", n_episode)
-
-    ckt.calc_density_factor(4)
-    ckt.evaluation()
-    ckt.check_legality()
 
     # SA
     ckt.SA(ckt_original, action_list)

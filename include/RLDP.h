@@ -12,9 +12,9 @@ namespace RL_LEGALIZER{
   struct truffle{
     int Gcell_id;
     int stdcell_num;
-    int gcell_density;
-    truffle() : Gcell_id(-1), stdcell_num(0), gcell_density(0) {}
-    truffle(int x, int y, int z) : Gcell_id(x), stdcell_num(y), gcell_density(z) {}
+    int Gcell_density;
+    truffle() : Gcell_id(-1), stdcell_num(0), Gcell_density(0) {}
+    truffle(int x, int y, int z) : Gcell_id(x), stdcell_num(y), Gcell_density(z) {}
   };
 
   struct Instance {

@@ -16,7 +16,7 @@ using namespace opendp;
 using namespace RL_LEGALIZER;
 
 bool Gcell_density_order(truffle &a, truffle &b){
-  if(a.gcell_density > b.gcell_density)
+  if(a.Gcell_density > b.Gcell_density)
     return true;
   else
     return false;
@@ -336,7 +336,7 @@ std::vector<truffle> RLDP::get_Gcell(){
   }
 
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    Gcell_density[i].gcell_density = (macro_density[i] + cell_density[i])/1000;
+    Gcell_density[i].Gcell_density = (macro_density[i] + cell_density[i])/1000;
   }
 
   delete[] cell_density;
@@ -580,7 +580,7 @@ void RLDP::SA(const RLDP& copied, std::vector<int> action_list){
   before_hpwl = this->calc_HPWL();
   after_hpwl = before_hpwl;
 
-  for(int iter = 0; iter < total_cell; iter++){
+  for(int iter = 0; iter < 100; iter++){
     cout << "Iter: " << iter << endl;
     cout << " HPWL: " << after_hpwl << endl;
 

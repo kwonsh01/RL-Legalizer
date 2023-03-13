@@ -68,7 +68,7 @@ namespace RL_LEGALIZER{
     bool calc_done();
     bool calc_Gcell_done(int runtime_gcell);
 
-    void SA(const RLDP& copied, std::vector<int> action_list);
+    void SA(const RLDP& copied, std::vector<int> action_list, int Iter);
   };
 }
 

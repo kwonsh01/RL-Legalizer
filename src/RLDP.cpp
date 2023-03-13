@@ -567,7 +567,7 @@ bool RLDP::calc_Gcell_done(int runtime_gcell){
   return false;
 }
 
-void RLDP::SA(const RLDP& copied, std::vector<int> action_list){
+void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter){
   int i, j;
   double temp_rand = 1.0;
   double before_hpwl = 0.0, after_hpwl = 0.0;
@@ -580,7 +580,7 @@ void RLDP::SA(const RLDP& copied, std::vector<int> action_list){
   before_hpwl = this->calc_HPWL();
   after_hpwl = before_hpwl;
 
-  for(int iter = 0; iter < 100; iter++){
+  for(int iter = 0; iter < Iter; iter++){
     cout << "Iter: " << iter << endl;
     cout << " HPWL: " << after_hpwl << endl;
 

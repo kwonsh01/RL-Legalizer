@@ -39,14 +39,16 @@ namespace RL_LEGALIZER{
     int total_cell;
     int Gcell_grid;
     std::vector<truffle> Gcell_density;
-    std::vector< std::vector<Instance> > cell_list_isnotFixed;
+    std::vector< Instance > cell_list;
+    std::vector< std::vector<Instance*> > Gcell_cell_list;
    public:
     RLDP();
     ~RLDP() = default;
     void read_files(std::string argv, int Gcell_grid_num);
     void copy_data(const RLDP& copied);
 
-    std::vector< std::vector<Instance> >& get_Cell();
+    void Cell_init();
+    std::vector< std::vector<Instance*> >& get_Cell();
     void Gcell_init();
     std::vector<truffle> get_Gcell();
 

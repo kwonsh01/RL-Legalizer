@@ -24,6 +24,7 @@ K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
 
 Gcell_grid_num = 5
+Iter = 150
 
 class PPO(nn.Module):
     def __init__(self):
@@ -345,14 +346,16 @@ def main():
         else:
             n_episode += 1
 
+    # SA
+    ckt.SA(ckt_original, action_list, Iter)
+
     print("[TRAIN] End Training!")
 
     end = time.time()
     print("Execute time: ", end-start, "[s]")
     print("Episode: ", n_episode)
 
-    # SA
-    ckt.SA(ckt_original, action_list)
+
 
 
     ckt.write_def("output/"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")

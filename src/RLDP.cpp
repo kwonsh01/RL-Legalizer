@@ -249,24 +249,19 @@ void RLDP::copy_data(const RLDP& copied){
   group_pixel_assign();
   init_large_cell_stor();
 
-  for(vector<Instance>& theCell : cell_list_isnotFixed){
-    for(Instance& cell : theCell){
-      cell.moveTry = false;
+  for(vector<Instance*> theCell : Gcell_cell_list){
+    for(Instance* cell : theCell){
+      cell->moveTry = false;
     }
   }
 
 }
 
-vector< vector<Instance> >& RLDP::get_Cell(){
-
-  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    vector<Instance> temp;
-    cell_list_isnotFixed.push_back(temp);
-  }
-
-  int x, y;
+void RLDP::Cell_init(){
+  int x, y, gcell_id;
   int row = int(this->ty) / Gcell_grid;
   int col = int(this->rx) / Gcell_grid;
+
   total_cell = 0;
 
   for(int i = 0; i < cells.size(); i++) {
@@ -275,19 +270,31 @@ vector< vector<Instance> >& RLDP::get_Cell(){
     x = cells[i].init_x_coord / col;
     y = cells[i].init_y_coord / row;
 
-    int gcell_id = x + y * Gcell_grid;
+    gcell_id = x + y * Gcell_grid;
 
     total_cell++;
-    cell_list_isnotFixed[gcell_id].emplace_back(&(cells[i]), gcell_id);
+    cell_list.emplace_back(&(cells[i]), gcell_id);
+  }
+}
+
+vector< vector<Instance*> >& RLDP::get_Cell(){
+  this->Cell_init();
+  for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
+    vector<Instance*> temp;
+    Gcell_cell_list.push_back(temp);
   }
 
-  return cell_list_isnotFixed;
+  for(Instance& i : cell_list) {
+    Gcell_cell_list[i.Gcell_id].push_back(&i);
+  }
+
+  return Gcell_cell_list;
 }
 
 void RLDP::Gcell_init(){
   int gcell_id = 0;
 
-  for(std::vector<Instance> &instance_vector : cell_list_isnotFixed){
+  for(std::vector<Instance*>& instance_vector : Gcell_cell_list){
     Gcell_density.emplace_back(gcell_id++, instance_vector.size(), 0);
   }
 
@@ -328,9 +335,9 @@ std::vector<truffle> RLDP::get_Gcell(){
 
   //density by cells
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    for(Instance &Instance : cell_list_isnotFixed[i]){
-      if(Instance.Gcell_id == i){
-        cell_density[i] += int(Instance.cell->height) * int(Instance.cell->width);
+    for(Instance *Instance : Gcell_cell_list[i]){
+      if(Instance->Gcell_id == i){
+        cell_density[i] += int(Instance->cell->height) * int(Instance->cell->width);
       }
     }
   }
@@ -343,7 +350,6 @@ std::vector<truffle> RLDP::get_Gcell(){
   delete[] macro_density;
 
   sort(Gcell_density.begin(), Gcell_density.end(), Gcell_density_order);
-  // sort(cell_list_isnotFixed.begin(), cell_list_isnotFixed.end(), Cell_id_order);
   return Gcell_density;
 }
 
@@ -383,13 +389,13 @@ void RLDP::pre_placement() {
 }
 
 void RLDP::place_oneCell(int gcell_id, int cell_idx){
-  Instance& theinstance = cell_list_isnotFixed[gcell_id][cell_idx];
-  cell* thecell = cell_list_isnotFixed[gcell_id][cell_idx].cell;
+  Instance *theinstance = Gcell_cell_list[gcell_id][cell_idx];
+  cell* thecell = Gcell_cell_list[gcell_id][cell_idx]->cell;
 
-  if(!theinstance.moveTry){
+  if(!theinstance->moveTry){
     placed_cell++;
     placed_Gcell++;
-    theinstance.moveTry = true;
+    theinstance->moveTry = true;
   }
 
   if(!thecell->isPlaced){
@@ -398,11 +404,9 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx){
         cout << thecell->name << " -> move failed!" << endl;
       }
     }
-    cell_list_isnotFixed[gcell_id][cell_idx].moveTry = true;
-    thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
-    cout << cell_list_isnotFixed[gcell_id][cell_idx].cell->id << "'s cell_placement done .. " << endl;
   }
-
+  thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
+  cout << Gcell_cell_list[gcell_id][cell_idx]->cell->id << "'s cell_placement done .. " << endl;
   // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
 }
 
@@ -454,9 +458,9 @@ double RLDP::reward_calc_Gcell(int gcell_id){
     return 99999;
   }
 
-  for(Instance theCell : cell_list_isnotFixed[gcell_id]){
-    if(theCell.cell->isPlaced){
-      displacement = theCell.cell->disp;
+  for(Instance *theCell : Gcell_cell_list[gcell_id]){
+    if(theCell->cell->isPlaced){
+      displacement = theCell->cell->disp;
       avg_disp += displacement;
       if(displacement > max_disp){
         max_disp = displacement;
@@ -537,10 +541,10 @@ double RLDP::calc_avg_disp(){
   double avg_disp = 0;
   int count_displacement = 0;
 
-  for(std::vector<Instance> theCells : cell_list_isnotFixed){
-    for(Instance& theCell : theCells){
-      if(theCell.cell->isPlaced){
-        avg_disp += theCell.cell->disp;
+  for(std::vector<Instance*> theCells : Gcell_cell_list){
+    for(Instance *theCell : theCells){
+      if(theCell->cell->isPlaced){
+        avg_disp += theCell->cell->disp;
         count_displacement++;
       }
     }

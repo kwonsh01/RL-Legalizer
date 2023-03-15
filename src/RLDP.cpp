@@ -265,27 +265,30 @@ void RLDP::Cell_init(){
   total_cell = 0;
 
   for(int i = 0; i < cells.size(); i++) {
-    if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced) continue;
-
-    x = cells[i].init_x_coord / col;
-    y = cells[i].init_y_coord / row;
-
-    gcell_id = x + y * Gcell_grid;
-
-    total_cell++;
+    if(cells[i].isFixed || cells[i].inGroup || cells[i].isPlaced){
+      gcell_id = -1;
+    }
+    else{
+      x = cells[i].init_x_coord / col;
+      y = cells[i].init_y_coord / row;
+      gcell_id = x + y * Gcell_grid;
+      total_cell++;
+    }
     cell_list.emplace_back(&(cells[i]), gcell_id);
   }
 }
 
 vector< vector<Instance*> >& RLDP::get_Cell(){
   this->Cell_init();
+
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
     vector<Instance*> temp;
     Gcell_cell_list.push_back(temp);
   }
 
-  for(Instance& i : cell_list) {
-    Gcell_cell_list[i.Gcell_id].push_back(&i);
+  for(Instance& instance : cell_list) {
+    if(instance.cell->isFixed || instance.cell->inGroup || instance.cell->isPlaced) continue;
+    Gcell_cell_list[instance.Gcell_id].push_back(&instance);
   }
 
   return Gcell_cell_list;

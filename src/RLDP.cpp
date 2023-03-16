@@ -212,8 +212,6 @@ void RLDP::copy_data(const RLDP& copied){
   core = copied.core;
   wsite = copied.wsite;
 
-  grid = copied.grid;
-
   cells = copied.cells;
 
   prevrows = copied.prevrows;
@@ -223,38 +221,43 @@ void RLDP::copy_data(const RLDP& copied){
 
   for(int i = 0; i < row_num; i++) {
     for(int j = 0; j < col; j++) {
-      this->grid[i][j].name = "pixel_" + to_string(i) + "_" + to_string(j);
-      this->grid[i][j].y_pos = i;
-      this->grid[i][j].x_pos = j;
-      this->grid[i][j].linked_cell = NULL;
-      this->grid[i][j].isValid = false;
-    }
-  }
-  for(auto& curFragRow : prevrows) {
-    int x_start = IntConvert((1.0*curFragRow.origX - core.xLL) / wsite);
-    int y_start = IntConvert((1.0*curFragRow.origY - core.yLL) / rowHeight);
-
-    int x_end = x_start + curFragRow.numSites;
-    int y_end = y_start + 1;
-
-    for(int i=x_start; i<x_end; i++) {
-      for(int j=y_start; j<y_end; j++) {
-        grid[j][i].isValid = true;
-      }
+      this->grid[i][j].name = copied.grid[i][j].name;
+      this->grid[i][j].y_pos = copied.grid[i][j].y_pos;
+      this->grid[i][j].x_pos = copied.grid[i][j].x_pos;
+      this->grid[i][j].linked_cell = copied.grid[i][j].linked_cell;
+      this->grid[i][j].isValid = copied.grid[i][j].isValid;
     }
   }
 
-  fixed_cell_assign();
-  group_pixel_assign_2();
-  group_pixel_assign();
-  init_large_cell_stor();
-
-  for(vector<Instance*> theCell : Gcell_cell_list){
-    for(Instance* cell : theCell){
-      cell->moveTry = false;
-    }
+  for(Instance& theCell : cell_list){
+    theCell.moveTry = false;
   }
 
+}
+
+void RLDP::copy_allocate(double ty, double rowHeight, double rx, int wsite){
+  this->ty = ty;
+  this->rowHeight = rowHeight;
+  this->rx = rx;
+  this->wsite = wsite;
+
+  int row_num = this->ty / this->rowHeight;
+  int col = this->rx / this->wsite;
+
+  this->grid = new pixel*[row_num];
+  for(int i = 0; i < row_num; i++) {
+    this->grid[i] = new pixel[col];
+  }
+}
+
+void RLDP::copy_delete(){
+  int row_num = this->ty / this->rowHeight;
+  int col = this->rx / this->wsite;
+
+  for(int i = 0; i < row_num; i++) {
+    delete[] this->grid[i];
+  }
+  delete[] grid;
 }
 
 void RLDP::Cell_init(){

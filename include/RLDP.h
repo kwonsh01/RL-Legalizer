@@ -46,6 +46,8 @@ namespace RL_LEGALIZER{
     ~RLDP() = default;
     void read_files(std::string argv, int Gcell_grid_num);
     void copy_data(const RLDP& copied);
+    void copy_allocate(double ty, double rowHeight, double rx, int wsite);
+    void copy_delete();
 
     void Cell_init();
     std::vector< std::vector<Instance*> >& get_Cell();
@@ -66,6 +68,7 @@ namespace RL_LEGALIZER{
     double get_die_rx(){return this->rx;}
     double get_die_ty(){return this->ty;}
     double get_die_rH(){return this->rowHeight;}
+    int get_die_wsite(){return this->wsite;}
 
     bool calc_done();
     bool calc_Gcell_done(int runtime_gcell);

@@ -21,6 +21,7 @@ namespace RL_LEGALIZER{
     opendp::cell *cell;
     bool moveTry;
     int Gcell_id;
+    std::vector<opendp::net*> cell_nets;
 
     double get_width();
     bool get_moveTry();
@@ -50,6 +51,7 @@ namespace RL_LEGALIZER{
     void copy_delete();
 
     void Cell_init();
+    void net_assign_to_cell();
     std::vector< std::vector<Instance*> >& get_Cell();
     void Gcell_init();
     std::vector<truffle> get_Gcell();
@@ -61,6 +63,7 @@ namespace RL_LEGALIZER{
     double reward_calc();
     double reward_calc_Gcell(int gcell_id);
     double calc_HPWL();
+    double calc_HPWL(int gcell_id, int cell_idx);
     double calc_avg_disp();
 
     int get_Gcell_grid(){return this->Gcell_grid * this->Gcell_grid;}

@@ -15,7 +15,7 @@ using std::endl;
 using namespace opendp;
 using namespace RL_LEGALIZER;
 
-bool Gcell_density_order(truffle &a, truffle &b){
+bool Gcell_density_order(truffle &a, truffle &b) {
   if(a.Gcell_density > b.Gcell_density)
     return true;
   else
@@ -205,7 +205,7 @@ void RLDP::read_files(string argv, int Gcell_grid_num) {
   return;
 }
 
-void RLDP::copy_data(const RLDP& copied){
+void RLDP::copy_data(const RLDP& copied) {
   rowHeight = copied.rowHeight;
   rx = copied.rx;
   ty = copied.ty;
@@ -235,7 +235,7 @@ void RLDP::copy_data(const RLDP& copied){
 
 }
 
-void RLDP::copy_allocate(double ty, double rowHeight, double rx, int wsite){
+void RLDP::copy_allocate(double ty, double rowHeight, double rx, int wsite) {
   this->ty = ty;
   this->rowHeight = rowHeight;
   this->rx = rx;
@@ -250,17 +250,16 @@ void RLDP::copy_allocate(double ty, double rowHeight, double rx, int wsite){
   }
 }
 
-void RLDP::copy_delete(){
+void RLDP::copy_delete() {
   int row_num = this->ty / this->rowHeight;
-  int col = this->rx / this->wsite;
 
   for(int i = 0; i < row_num; i++) {
     delete[] this->grid[i];
   }
-  delete[] grid;
+  delete[] this->grid;
 }
 
-void RLDP::Cell_init(){
+void RLDP::Cell_init() {
   int x, y, gcell_id;
   int row = int(this->ty) / Gcell_grid;
   int col = int(this->rx) / Gcell_grid;
@@ -281,8 +280,29 @@ void RLDP::Cell_init(){
   }
 }
 
-vector< vector<Instance*> >& RLDP::get_Cell(){
+void RLDP::net_assign_to_cell() {
+  for(int i = 0; i < nets.size(); i++) {
+    net* theNet = &nets[i];
+    pin* source = &pins[theNet->source];
+
+    // cout << "net number: "<< i << endl << source->owner << endl;
+    if(source->owner >= 0 && source->owner < cell_list.size()){
+      cell_list[source->owner].cell_nets.push_back(theNet);
+    }
+
+    for(int j = 0; j < theNet->sinks.size(); j++) {
+      pin* sink = &pins[theNet->sinks[j]];
+      // cout << "net sink number: "<< j << endl << sink->owner << endl;
+      if(sink->owner >= 0 && sink->owner < cell_list.size()){
+        cell_list[sink->owner].cell_nets.push_back(theNet);
+      }
+    }
+  }
+}
+
+vector< vector<Instance*> >& RLDP::get_Cell() {
   this->Cell_init();
+  this->net_assign_to_cell();
 
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
     vector<Instance*> temp;
@@ -297,7 +317,7 @@ vector< vector<Instance*> >& RLDP::get_Cell(){
   return Gcell_cell_list;
 }
 
-void RLDP::Gcell_init(){
+void RLDP::Gcell_init() {
   int gcell_id = 0;
 
   for(std::vector<Instance*>& instance_vector : Gcell_cell_list){
@@ -306,7 +326,7 @@ void RLDP::Gcell_init(){
 
 }
 
-std::vector<truffle> RLDP::get_Gcell(){
+std::vector<truffle> RLDP::get_Gcell() {
   Gcell_init();
 
   int row = int(this->ty) / Gcell_grid;
@@ -394,7 +414,7 @@ void RLDP::pre_placement() {
   }
 }
 
-void RLDP::place_oneCell(int gcell_id, int cell_idx){
+void RLDP::place_oneCell(int gcell_id, int cell_idx) {
   Instance *theinstance = Gcell_cell_list[gcell_id][cell_idx];
   cell* thecell = Gcell_cell_list[gcell_id][cell_idx]->cell;
 
@@ -416,7 +436,7 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx){
   // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
 }
 
-void RLDP::place_oneCell(int cell_idx){
+void RLDP::place_oneCell(int cell_idx) {
   cell* thecell = &this->cells[cell_idx];
 
   if(!thecell->isPlaced){
@@ -430,7 +450,7 @@ void RLDP::place_oneCell(int cell_idx){
 
 }
 
-double RLDP::reward_calc(){
+double RLDP::reward_calc() {
   double avg_disp = 0;
   double max_disp = 0;
   double displacement = 0;
@@ -453,7 +473,7 @@ double RLDP::reward_calc(){
   return (50 / (1 + avg_disp)) + (5 / (1 + max_disp));
 }
 
-double RLDP::reward_calc_Gcell(int gcell_id){
+double RLDP::reward_calc_Gcell(int gcell_id) {
   double avg_disp = 0;
   double max_disp = 0;
   double displacement = 0;
@@ -543,7 +563,73 @@ double RLDP::calc_HPWL() {
   return hpwl / static_cast< double >(DEFdist2Microns);
 }
 
-double RLDP::calc_avg_disp(){
+double RLDP::calc_HPWL(int gcell_id, int cell_idx) {
+  double hpwl = 0;
+
+  double x_coord = 0;
+  double y_coord = 0;
+
+  std::vector<net*>& theNet_lst = Gcell_cell_list[gcell_id][cell_idx]->cell_nets;
+
+  for(int i = 0; i < theNet_lst.size(); i++) {
+    rect box;
+    net* theNet = theNet_lst[i];
+    // cout << " net name : " << theNet->name << endl;
+    pin* source = &pins[theNet->source];
+
+    if(source->type == NONPIO_PIN) {
+      cell* theCell = &cells[source->owner];
+      if(!theCell->isPlaced) {
+        x_coord = theCell->init_x_coord;
+        y_coord = theCell->init_y_coord;
+      }
+      else {
+        x_coord = theCell->x_coord;
+        y_coord = theCell->y_coord;
+      }
+      box.xLL = box.xUR = x_coord + source->x_offset * DEFdist2Microns;
+      box.yLL = box.yUR = y_coord + source->y_offset * DEFdist2Microns;
+    }
+    else {
+      box.xLL = box.xUR = source->x_coord;
+      box.yLL = box.yUR = source->y_coord;
+    }
+
+    for(int j = 0; j < theNet->sinks.size(); j++) {
+      pin* sink = &pins[theNet->sinks[j]];
+      // cout << " sink name : " << sink->name << endl;
+      if(sink->type == NONPIO_PIN) {
+        cell* theCell = &cells[sink->owner];
+        // if(!theCell->moveTry) {
+        if(!theCell->isPlaced) {
+          x_coord = theCell->init_x_coord;
+          y_coord = theCell->init_y_coord;
+        }
+        else {
+          x_coord = theCell->x_coord;
+          y_coord = theCell->y_coord;
+        }
+        box.xLL = std::min(box.xLL, x_coord + sink->x_offset * DEFdist2Microns);
+        box.xUR = std::max(box.xUR, x_coord + sink->x_offset * DEFdist2Microns);
+        box.yLL = std::min(box.yLL, y_coord + sink->y_offset * DEFdist2Microns);
+        box.yUR = std::max(box.yUR, y_coord + sink->y_offset * DEFdist2Microns);
+      }
+      else {
+        box.xLL = std::min(box.xLL, sink->x_coord);
+        box.xUR = std::max(box.xUR, sink->x_coord);
+        box.yLL = std::min(box.yLL, sink->y_coord);
+        box.yUR = std::max(box.yUR, sink->y_coord);
+      }
+    }
+
+    double box_boundary = (box.xUR - box.xLL + box.yUR - box.yLL);
+
+    hpwl += box_boundary;
+  }
+  return hpwl / static_cast< double >(DEFdist2Microns);
+}
+
+double RLDP::calc_avg_disp() {
   double avg_disp = 0;
   int count_displacement = 0;
 
@@ -561,7 +647,7 @@ double RLDP::calc_avg_disp(){
   return avg_disp;
 }
 
-bool RLDP::calc_done(){
+bool RLDP::calc_done() {
   if(total_cell == placed_cell){
     placed_cell = 0;
     return true;
@@ -569,7 +655,7 @@ bool RLDP::calc_done(){
   return false;
 }
 
-bool RLDP::calc_Gcell_done(int runtime_gcell){
+bool RLDP::calc_Gcell_done(int runtime_gcell) {
   if(Gcell_density[runtime_gcell].stdcell_num == placed_Gcell){
     placed_Gcell = 0;
     return true;
@@ -577,7 +663,7 @@ bool RLDP::calc_Gcell_done(int runtime_gcell){
   return false;
 }
 
-void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter){
+void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter) {
   int i, j;
   double temp_rand = 1.0;
   double before_hpwl = 0.0, after_hpwl = 0.0;

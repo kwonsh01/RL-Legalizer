@@ -179,10 +179,13 @@ def main():
     Cell = ckt.get_Cell() #total_cell_vector
     Gcell = ckt.get_Gcell() #cell number at Gcells vector, [0]:gcell_id, [1]:stdcell_num, [2]:gcell_density
 
+    ckt.pre_placement()
+
     rx = ckt.get_die_rx()
     ty = ckt.get_die_ty()
     rH = ckt.get_die_rH()
 
+    ckt_original.copy_allocate(ty, rH, rx, ckt.get_die_wsite())
     ckt_original.copy_data(ckt)
 
     total_cell = ckt.total_cell_num()
@@ -224,7 +227,6 @@ def main():
 
         #load initial circuit and state
         ckt.copy_data(ckt_original)
-        ckt.pre_placement()
 
         score = 0.0
         stepN = 0
@@ -348,15 +350,12 @@ def main():
 
     # SA
     ckt.SA(ckt_original, action_list, Iter)
-
+    ckt_original.copy_delete()
     print("[TRAIN] End Training!")
 
     end = time.time()
     print("Execute time: ", end-start, "[s]")
     print("Episode: ", n_episode)
-
-
-
 
     ckt.write_def("output/"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
     print("data: ", output)

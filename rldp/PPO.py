@@ -179,10 +179,13 @@ def main():
     Cell = ckt.get_Cell() #total_cell_vector
     Gcell = ckt.get_Gcell() #cell number at Gcells vector, [0]:gcell_id, [1]:stdcell_num, [2]:gcell_density
 
+    ckt.pre_placement()
+
     rx = ckt.get_die_rx()
     ty = ckt.get_die_ty()
     rH = ckt.get_die_rH()
 
+    ckt_original.copy_allocate(ty, rH, rx, ckt.get_die_wsite())
     ckt_original.copy_data(ckt)
 
     total_cell = ckt.total_cell_num()
@@ -209,9 +212,6 @@ def main():
     END = False
     start = time.time()
 
-    hpwl_init = ckt.HPWL("INIT")
-    hpwl_before = hpwl_init
-
     while not END:
         print("[TRAIN] Start New Episode!")
         print("[TRAIN] EPISODE #",n_episode)
@@ -224,13 +224,11 @@ def main():
 
         #load initial circuit and state
         ckt.copy_data(ckt_original)
-        ckt.pre_placement()
 
         score = 0.0
         stepN = 0
         done = False
         runtime_Gcell = 0 # gcell index using runtime
-        hpwl_before = hpwl_init
 
         while not done:
             gcell_done = False
@@ -278,6 +276,8 @@ def main():
                 if timeUp:
                     action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
 
+                hpwl_before = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
+
                 #placement and reward/done load
                 ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
                 placed_cell_num = placed_cell_num + 1
@@ -286,11 +286,10 @@ def main():
                 inference_time_start += time.time() - a_time
                 #endif
 
-                r = 100 * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
-                # hpwl_after = ckt.calc_HPWL()
-                # hpwl_delta = 5 *  (hpwl_after - hpwl_before)/hpwl_after
-                # r = 100 * math.exp(-hpwl_delta) * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
-                # hpwl_before = hpwl_after
+                # r = 100 * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
+                hpwl_after = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
+                hpwl_delta = 5 *  (hpwl_after - hpwl_before)/hpwl_after
+                r = 100 * math.exp(-hpwl_delta) * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
 
                 print("\033[31m" + "Episode: " + "\033[0m", n_episode)
                 print("\033[33m" + "reward: " + "\033[0m", r)
@@ -348,15 +347,12 @@ def main():
 
     # SA
     ckt.SA(ckt_original, action_list, Iter)
-
+    ckt_original.copy_delete()
     print("[TRAIN] End Training!")
 
     end = time.time()
     print("Execute time: ", end-start, "[s]")
     print("Episode: ", n_episode)
-
-
-
 
     ckt.write_def("output/"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
     print("data: ", output)

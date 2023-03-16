@@ -683,7 +683,6 @@ void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter) {
     before_hpwl = after_hpwl;
 
     this->copy_data(copied);
-    this->pre_placement();
 
     i = prob_int(gen);
     j = prob_int(gen);

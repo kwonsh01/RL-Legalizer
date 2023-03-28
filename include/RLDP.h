@@ -24,6 +24,7 @@ namespace RL_LEGALIZER{
     std::vector<opendp::net*> cell_nets;
 
     bool get_moveTry();
+    int get_Netsize();
     double get_width(double rH);
     double get_Xcoord(double rx);
     double get_Ycoord(double ty);

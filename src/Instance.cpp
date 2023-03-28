@@ -6,6 +6,10 @@ bool Instance::get_moveTry(){
   return this->moveTry;
 }
 
+int Instance::get_Netsize(){
+  return cell_nets.size();
+}
+
 double Instance::get_width(double rH){
   return cell->width / rH;
 }

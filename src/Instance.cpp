@@ -10,7 +10,15 @@ bool Instance::get_moveTry(){
   return this->moveTry;
 }
 
-double Instance::get_GcellXcoord(int Gcell_grid, float rx){
+double Instance::get_Xcoord(double rx){
+  return cell->isPlaced ? this->cell->x_coord / rx : this->cell->init_x_coord / rx;
+}
+
+double Instance::get_Ycoord(double ty){
+  return cell->isPlaced ? this->cell->y_coord / ty : this->cell->init_y_coord / ty;
+}
+
+double Instance::get_GcellXcoord(int Gcell_grid, double rx){
   int x_pre;
   int col;
   int shamt_x;
@@ -32,7 +40,7 @@ double Instance::get_GcellXcoord(int Gcell_grid, float rx){
   return double(x_new) / col;
 }
 
-double Instance::get_GcellYcoord(int Gcell_grid, float ty){
+double Instance::get_GcellYcoord(int Gcell_grid, double ty){
   int y_pre;
   int row;
   int shamt_y;

@@ -25,8 +25,10 @@ namespace RL_LEGALIZER{
 
     double get_width();
     bool get_moveTry();
-    double get_GcellXcoord(int Gcell_grid, float rx);
-    double get_GcellYcoord(int Gcell_grid, float ty);
+    double get_Xcoord(double rx);
+    double get_Ycoord(double ty);
+    double get_GcellXcoord(int Gcell_grid, double rx);
+    double get_GcellYcoord(int Gcell_grid, double ty);
 
     Instance() : cell(nullptr), moveTry(false), Gcell_id(-1) {};
     Instance(opendp::cell *cell, int Gcell_id) : cell(cell), moveTry(false), Gcell_id(Gcell_id) {};

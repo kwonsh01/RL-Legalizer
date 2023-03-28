@@ -119,9 +119,9 @@ class PPO(nn.Module):
             loss.mean().backward()
             self.optimizer.step()
 
-def read_state_gcell(Cell, gcell_id, rx, ty, rH):
+def read_state_gcell(Cell, rx, ty, rH):
     state = []
-    for j in (Cell[gcell_id]):
+    for j in (Cell):
         isTried = j.get_moveTry()
         x = j.get_GcellXcoord(Gcell_grid_num, rx)
         y = j.get_GcellYcoord(Gcell_grid_num, ty)
@@ -130,9 +130,9 @@ def read_state_gcell(Cell, gcell_id, rx, ty, rH):
         state.append([isTried, x, y, width])
     return state
 
-def read_state_gcell_train(Cell, gcell_id, rx, ty, rH):
+def read_state_gcell_train(Cell, rx, ty, rH):
     state = []
-    for j in (Cell[gcell_id]):
+    for j in (Cell):
         x = j.get_GcellXcoord(Gcell_grid_num, rx)
         y = j.get_GcellYcoord(Gcell_grid_num, ty)
         width = j.get_width() / rH
@@ -233,7 +233,7 @@ def main():
         while not done:
             gcell_done = False
             placed_cell_num = 0
-            s = read_state_gcell(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
+            s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
             s_train = read_state_gcell_train(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
 
             while not gcell_done:
@@ -301,7 +301,7 @@ def main():
                 print("\033[32m" + "         Gcell_id: ", Gcell[runtime_Gcell].Gcell_id, "\033[0m")
 
                 #cellist reload and state update
-                s_prime = read_state_gcell(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
+                s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
                 s_prime_train = read_state_gcell_train(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
 
                 model.put_data((s_train, a, r, s_prime_train, probf[a].item(), done))

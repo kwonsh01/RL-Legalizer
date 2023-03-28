@@ -7,7 +7,7 @@ bool Instance::get_moveTry(){
 }
 
 double Instance::get_width(double rH){
-  return cell->width;
+  return cell->width /rH;
 }
 
 double Instance::get_Xcoord(double rx){

@@ -23,37 +23,30 @@ eps_clip      = 0.2 # 0.1 ~ 0.3
 K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
 
-Gcell_grid_num = 5
+Gcell_grid_num = 3
 Iter = 150
 
 class PPO(nn.Module):
     def __init__(self):
         super(PPO, self).__init__()
         self.data = []
-        self.fc1 = nn.Linear(3, 64)
-        self.fc2 = nn.Linear(64, 64)
-        self.fc3 = nn.Linear(64, 64)
-        self.fc_pi = nn.Linear(64, 1)
-        self.fc_v = nn.Linear(64, 1)
+        self.fc1 = nn.Linear(3, 128)
+        self.fc2 = nn.Linear(128, 128)
+        self.fc_pi = nn.Linear(128, 1)
+        self.fc_v = nn.Linear(128, 1)
         self.optimizer = optim.Adam(self.parameters(), lr=learning_rate)
 
     def pi(self, x, softmax_dim=0):
-        # x.shape = ( N x 3 )
-        x = F.normalize(x, dim=0)
+        # x = F.normalize(x, dim=0)
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
-        # x.shape = ( N x 64 )
         x = self.fc_pi(x)
-        # x.shape = ( N x 1 )
         prob = F.softmax(x, dim=softmax_dim)
-        # prob.shape = ( N x 1 )
         return prob
 
     def v(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
         v = self.fc_v(x)
         return v
 
@@ -125,7 +118,6 @@ def read_state_gcell(Cell, rx, ty, rH):
         isTried = j.get_moveTry()
         x = j.get_GcellXcoord(Gcell_grid_num, rx)
         y = j.get_GcellYcoord(Gcell_grid_num, ty)
-        
         width = j.get_width() / rH
         state.append([isTried, x, y, width])
     return state
@@ -234,7 +226,7 @@ def main():
             gcell_done = False
             placed_cell_num = 0
             s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
-            s_train = read_state_gcell_train(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
+            s_train = read_state_gcell_train(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
 
             while not gcell_done:
                 #step
@@ -245,7 +237,6 @@ def main():
                 #endif
 
                 s_List = copy.deepcopy(s)
-
                 k=0
                 indices = []
                 for index in range(len(s)):
@@ -302,7 +293,7 @@ def main():
 
                 #cellist reload and state update
                 s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
-                s_prime_train = read_state_gcell_train(Cell, Gcell[runtime_Gcell].Gcell_id, rx, ty, rH)
+                s_prime_train = read_state_gcell_train(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
 
                 model.put_data((s_train, a, r, s_prime_train, probf[a].item(), done))
 
@@ -351,8 +342,12 @@ def main():
     print("[TRAIN] End Training!")
 
     end = time.time()
-    print("Execute time: ", end-start, "[s]")
-    print("Episode: ", n_episode)
+    print()
+    print("[TRAIN] End Training!")
+    total_time = end-start
+    print(f'\033[31mExecute Time: \033[0m {total_time:.3f}[s]')
+    print("\033[31m" + "Execute Episode: " + "\033[0m", n_episode)
+    print()
 
     ckt.write_def("output/"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
     print("data: ", output)
@@ -384,8 +379,8 @@ if __name__ == '__main__':
     if is_cuda:
         gc.collect()
         torch.cuda.empty_cache()
-        device = torch.device("cpu")
-    # device = torch.device("cuda:1")
+        # device = torch.device("cpu")
+        device = torch.device("cuda:1")
         print("GPU is available")
     else:
         device = torch.device("cpu")

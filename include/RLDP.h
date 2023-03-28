@@ -23,8 +23,8 @@ namespace RL_LEGALIZER{
     int Gcell_id;
     std::vector<opendp::net*> cell_nets;
 
-    double get_width();
     bool get_moveTry();
+    double get_width(double rH);
     double get_Xcoord(double rx);
     double get_Ycoord(double ty);
     double get_GcellXcoord(int Gcell_grid, double rx);

@@ -2,12 +2,12 @@
 
 using namespace RL_LEGALIZER;
 
-double Instance::get_width(){
-  return cell->width;
-}
-
 bool Instance::get_moveTry(){
   return this->moveTry;
+}
+
+double Instance::get_width(double rH){
+  return cell->width;
 }
 
 double Instance::get_Xcoord(double rx){

@@ -10,13 +10,8 @@ import time
 import copy
 import math
 
-# from pypreprocessor import pypreprocessor
-# pypreprocessor.parse()
-
-#define DEBUG
-
 #Hyperparameters
-learning_rate = 0.00003 # 0.003 ~ 0.000005
+learning_rate = 0.000015 # 0.003 ~ 0.000005
 gamma         = 0.99 # 0.8 ~ 0.9997 in general: 0.99
 lmbda         = 0.975 # 0.9 ~ 1.0
 eps_clip      = 0.2 # 0.1 ~ 0.3
@@ -24,7 +19,7 @@ K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
 
 Gcell_grid_num = 3
-Iter = 150
+Iter = 0
 
 class PPO(nn.Module):
     def __init__(self):
@@ -112,14 +107,14 @@ class PPO(nn.Module):
 def read_state_gcell(Cell, rx, ty, rH):
     state = []
     for j in (Cell):
-        isTried = 1.0 if j.get_moveTry() else 0.0
+        Placed = 1.0 if j.cell.isPlaced else 0.0
         # x = j.get_GcellXcoord(Gcell_grid_num, rx)
         x = j.get_Xcoord(rx)
         # y = j.get_GcellYcoord(Gcell_grid_num, ty)
         y = j.get_Ycoord(ty)
         width = j.get_width(rH)
         net_num = j.get_Netsize()
-        state.append([isTried, x, y, width, float(net_num)/Gcell_grid_num])
+        state.append([Placed, x, y, width, float(net_num)/Gcell_grid_num])
     return state
 
 def main():
@@ -153,13 +148,12 @@ def main():
 
     output = "data/"
 
-    #post placement
     ckt = rldp.RLDP()
     ckt_original = rldp.RLDP()
 
     ckt.read_files(argv, Gcell_grid_num)
 
-    Cell = ckt.get_Cell() #total_cell_vector
+    Cell = ckt.get_Cell() #total_cell_vector, sorted by gcell_id
     Gcell = ckt.get_Gcell() #cell number at Gcells vector, [0]:gcell_id, [1]:stdcell_num, [2]:gcell_density
 
     ckt.pre_placement()
@@ -172,7 +166,6 @@ def main():
     ckt_original.copy_data(ckt)
 
     total_cell = ckt.total_cell_num()
-    number_of_gcell = ckt.get_Gcell_grid() #number_of_gcell
 
     model = PPO().to(device)
 
@@ -181,10 +174,8 @@ def main():
     hpwl_arr = []
     total_epi_time_arr = []
     avg_disp_arr = []
-    #ifdef DEBUG
     inference_time_arr = []
     train_time_arr = []
-    #endif
 
     n_episode = 1
     howLong = int(input("How Long? (min)"))
@@ -194,15 +185,12 @@ def main():
 
     while not END:
         print("[TRAIN] Start New Episode!")
-        print("[TRAIN] EPISODE #",n_episode)
+        print("[TRAIN] EPISODE #", n_episode)
         epi_time_start = time.time()
 
-        #ifdef DEBUG #endif
         inference_time_start = 0
         train_time_start = 0
-        #endif
 
-        #load initial circuit and state
         ckt.copy_data(ckt_original)
 
         score = 0.0
@@ -216,14 +204,11 @@ def main():
             s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
 
             while not gcell_done:
-                #step
+            #step
                 current_time = time.time()-start
                 print(f'Execute...ing time: {current_time:.3f}[s]')
-                #action
-                #ifdef DEBUG
+            #action
                 a_time = time.time()
-                #endif
-
                 s_List = copy.deepcopy(s)
                 s_List = torch.tensor(s_List, dtype=torch.float).to(device)
 
@@ -232,7 +217,6 @@ def main():
 
                 for i in range(len(s)):
                     if s[i][0]:
-                        # if Cell[Gcell[runtime_Gcell].Gcell_id][i].get_moveTry():
                         probf[i] = 0.0
 
                 a = Categorical(probf)
@@ -242,23 +226,20 @@ def main():
                 if timeUp:
                     action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
 
-                hpwl_before = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
+                # hpwl_before = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
 
-                #placement and reward/done load
+            #placement
                 ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
                 placed_cell_num = placed_cell_num + 1
                 stepN += 1
-                #ifdef DEBUG
                 inference_time_start += time.time() - a_time
-                #endif
 
-                # r = 5*rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
-
-                # r = 100 * ckt.reward_calc_Gcell(Gcell[runtime_Gcell].Gcell_id)
-                hpwl_after = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
-                hpwl_delta = 10 *  (hpwl_after - hpwl_before)/hpwl_after
-                r = math.exp(-hpwl_delta)
-                #+ rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
+            #reward
+                r = 5*rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
+                # hpwl_after = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
+                # hpwl_delta = 100*(hpwl_after - hpwl_before)/hpwl_before
+                # r = -hpwl_delta
+                # r = rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
 
                 print("\033[31m" + "Episode: " + "\033[0m", n_episode)
                 print("\033[33m" + "reward: " + "\033[0m", r)
@@ -269,7 +250,7 @@ def main():
                 print("\033[32m" + "         runtime_Gcell: ", runtime_Gcell, "\033[0m")
                 print("\033[32m" + "         Gcell_id: ", Gcell[runtime_Gcell].Gcell_id, "\033[0m")
 
-                #cellist reload and state update
+            #cellist reload and state update
                 s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
 
                 model.put_data((s, a, r, s_prime, probf[a].item(), done))
@@ -280,26 +261,21 @@ def main():
 
                 gcell_done = ckt.calc_Gcell_done(runtime_Gcell)
 
-            #ifdef DEBUG
+
             t_time = time.time()
-            #endif
             model.train_net()
-            #ifdef DEBUG
             train_time_start += time.time() - t_time
-            #endif
 
             runtime_Gcell += 1
 
             done = ckt.calc_done()
 
-        #episode end
+    #episode end
         score_arr.append(score)
         hpwl_arr.append(ckt.HPWL(""))
         total_epi_time_arr.append(time.time() - epi_time_start)
-        #ifdef DEBUG
         inference_time_arr.append(inference_time_start)
         train_time_arr.append(train_time_start)
-        #endif
         avg_disp_arr.append(ckt.calc_avg_disp())
 
         if timeUp:
@@ -309,38 +285,33 @@ def main():
         else:
             n_episode += 1
 
-    # SA
+# SA
     ckt.SA(ckt_original, action_list, Iter)
     ckt_original.copy_delete()
 
-    end = time.time()
+    total_time = time.time() - start
     print()
     print("[TRAIN] End Training!")
-    total_time = end-start
     print(f'\033[31mExecute Time: \033[0m {total_time:.3f}[s]')
     print("\033[31m" + "Execute Episode: " + "\033[0m", n_episode)
     print()
 
-    ckt.write_def("output/"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
+    ckt.write_def("output/"+file+"_"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
     print("data: ", output)
 
     f1 = open(output + "hpwl.txt", 'w')
     f3 = open(output + "score.txt", 'w')
     f4 = open(output + "epi_time.txt", 'w')
     f5 = open(output + "avg_disp.txt", 'w')
-    #ifdef DEBUG
     f6 = open(output + "train_time.txt", 'w')
     f7 = open(output + "inference_time.txt", 'w')
-    #endif
 
     f1.write(str(hpwl_arr))
     f3.write(str(score_arr))
     f4.write(str(total_epi_time_arr))
     f5.write(str(avg_disp_arr))
-    #ifdef DEBUG
     f6.write(str(train_time_arr))
     f7.write(str(inference_time_arr))
-    #endif
 
     print("- - - - - < Program END > - - - - - ")
 

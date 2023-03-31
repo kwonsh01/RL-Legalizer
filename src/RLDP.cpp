@@ -450,55 +450,6 @@ void RLDP::place_oneCell(int cell_idx) {
 
 }
 
-double RLDP::reward_calc() {
-  double avg_disp = 0;
-  double max_disp = 0;
-  double displacement = 0;
-  int count_displacement = 1;
-
-  for(int i = 0; i < cells.size(); i++){
-    cell* theCell = &cells[i];
-    if(theCell->isPlaced){
-      displacement = theCell->disp;
-      avg_disp += displacement;
-      if(displacement > max_disp){
-        max_disp = displacement;
-      }
-      count_displacement++;
-    }
-  }
-
-  avg_disp = avg_disp / count_displacement;
-
-  return (50 / (1 + avg_disp)) + (5 / (1 + max_disp));
-}
-
-double RLDP::reward_calc_Gcell(int gcell_id) {
-  double avg_disp = 0;
-  double max_disp = 0;
-  double displacement = 0;
-  int count_displacement = 0;
-
-  if(placement_fail){
-    placement_fail = false;
-    return 99999;
-  }
-
-  for(Instance *theCell : Gcell_cell_list[gcell_id]){
-    if(theCell->cell->isPlaced){
-      displacement = theCell->cell->disp;
-      avg_disp += displacement;
-      if(displacement > max_disp){
-        max_disp = displacement;
-      }
-      count_displacement++;
-    }
-  }
-
-  avg_disp = avg_disp / count_displacement;
-  return (50 / (1 + avg_disp)) + (5 / (1 + max_disp));
-}
-
 double RLDP::calc_HPWL() {
   double hpwl = 0;
 

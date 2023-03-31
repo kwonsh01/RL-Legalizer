@@ -63,8 +63,6 @@ namespace RL_LEGALIZER{
     void place_oneCell(int runtime_gcell, int cell_idx);
     void place_oneCell(int cell_idx);
 
-    double reward_calc();
-    double reward_calc_Gcell(int gcell_id);
     double calc_HPWL();
     double calc_HPWL(int gcell_id, int cell_idx);
     double calc_avg_disp();

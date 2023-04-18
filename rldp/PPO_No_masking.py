@@ -226,20 +226,17 @@ def main():
                 if timeUp:
                     action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
 
-                # hpwl_before = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
-
             #placement
-                ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
+                placed = ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
                 placed_cell_num = placed_cell_num + 1
                 stepN += 1
                 inference_time_start += time.time() - a_time
 
             #reward
-                r = 5*rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
-                # hpwl_after = ckt.calc_HPWL(Gcell[runtime_Gcell].Gcell_id, a)
-                # hpwl_delta = 100*(hpwl_after - hpwl_before)/hpwl_before
-                # r = -hpwl_delta
-                # r = rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
+                if placed:
+                    r = rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
+                else:
+                    r = -5
 
                 print("\033[31m" + "Episode: " + "\033[0m", n_episode)
                 print("\033[33m" + "reward: " + "\033[0m", r)

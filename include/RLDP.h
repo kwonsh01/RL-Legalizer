@@ -60,7 +60,7 @@ namespace RL_LEGALIZER{
     std::vector<truffle> get_Gcell();
 
     void pre_placement();
-    void place_oneCell(int runtime_gcell, int cell_idx);
+    bool place_oneCell(int runtime_gcell, int cell_idx);
     void place_oneCell(int cell_idx);
 
     double calc_HPWL();

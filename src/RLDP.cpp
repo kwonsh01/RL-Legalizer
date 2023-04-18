@@ -414,7 +414,8 @@ void RLDP::pre_placement() {
   }
 }
 
-void RLDP::place_oneCell(int gcell_id, int cell_idx) {
+bool RLDP::place_oneCell(int gcell_id, int cell_idx) {
+  bool success = true;
   Instance *theinstance = Gcell_cell_list[gcell_id][cell_idx];
   cell* thecell = Gcell_cell_list[gcell_id][cell_idx]->cell;
 
@@ -427,6 +428,7 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx) {
   if(!thecell->isPlaced){
     if(!map_move(thecell, "init_coord")) {
       if(!shift_move(thecell, "init_coord")) {
+        success = false;
         cout << thecell->name << " -> move failed!" << endl;
       }
     }
@@ -434,6 +436,7 @@ void RLDP::place_oneCell(int gcell_id, int cell_idx) {
   thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
   cout << Gcell_cell_list[gcell_id][cell_idx]->cell->id << "'s cell_placement done .. " << endl;
   // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+  return success;
 }
 
 void RLDP::place_oneCell(int cell_idx) {

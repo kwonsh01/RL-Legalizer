@@ -107,14 +107,15 @@ class PPO(nn.Module):
 def read_state_gcell(Cell, rx, ty, rH):
     state = []
     for j in (Cell):
-        Placed = 1.0 if j.cell.isPlaced else 0.0
+        moveTry = 1.0 if j.moveTry else 0.0
         # x = j.get_GcellXcoord(Gcell_grid_num, rx)
-        x = j.get_Xcoord(rx)
         # y = j.get_GcellYcoord(Gcell_grid_num, ty)
+        x = j.get_Xcoord(rx)
         y = j.get_Ycoord(ty)
-        width = j.get_width(rH)
-        net_num = j.get_Netsize()
-        state.append([Placed, x, y, width, float(net_num)/Gcell_grid_num])
+        width = j.get_Width(rH)
+        height = j.get_Height(rH)
+        net_num = float(j.get_Netsize())/Gcell_grid_num
+        state.append([moveTry, x, y, width, height, net_num])
     return state
 
 def main():

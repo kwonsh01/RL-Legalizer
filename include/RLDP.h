@@ -25,7 +25,8 @@ namespace RL_LEGALIZER{
 
     bool get_moveTry();
     int get_Netsize();
-    double get_width(double rH);
+    double get_Height(double rH);
+    double get_Width(double rH);
     double get_Xcoord(double rx);
     double get_Ycoord(double ty);
     double get_GcellXcoord(int Gcell_grid, double rx);

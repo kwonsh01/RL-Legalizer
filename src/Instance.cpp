@@ -10,7 +10,11 @@ int Instance::get_Netsize(){
   return cell_nets.size();
 }
 
-double Instance::get_width(double rH){
+double Instance::get_Height(double rH){
+  return cell->height / rH;
+}
+
+double Instance::get_Width(double rH){
   return cell->width / rH;
 }
 

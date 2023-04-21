@@ -104,7 +104,7 @@ class PPO(nn.Module):
             loss.mean().backward()
             self.optimizer.step()
 
-def read_state_gcell(Cell, rx, ty, rH):
+def read_state_gcell(Cell, rx, ty, rH, stepN):
     state = []
     for j in (Cell):
         moveTry = 1.0 if j.moveTry else 0.0
@@ -114,8 +114,10 @@ def read_state_gcell(Cell, rx, ty, rH):
         y = j.get_Ycoord(ty)
         width = j.get_Width(rH)
         height = j.get_Height(rH)
-        net_num = float(j.get_Netsize())/Gcell_grid_num
-        state.append([moveTry, x, y, width, height, net_num])
+        net_num = float(j.get_Net_num())/Gcell_grid_num
+        cells_num = float(Cell.size())/Gcell_grid_num
+        legalized_Gcell = float(stepN)/Gcell_grid_num
+        state.append([moveTry, x, y, width, height, net_num, cells_num, legalized_Gcell])
     return state
 
 def main():
@@ -294,7 +296,7 @@ def main():
     print("\033[31m" + "Execute Episode: " + "\033[0m", n_episode)
     print()
 
-    ckt.write_def("output/"+file+"_"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_sec)+".def")
+    ckt.write_def("output/"+file+"_"+str(time.localtime().tm_mon)+"_"+str(time.localtime().tm_mday)+"_"+str(time.localtime().tm_hour)+"_"+str(time.localtime().tm_min)+".def")
     print("data: ", output)
 
     f1 = open(output + "hpwl.txt", 'w')

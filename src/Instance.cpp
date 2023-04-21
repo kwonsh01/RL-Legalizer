@@ -6,7 +6,7 @@ bool Instance::get_moveTry(){
   return this->moveTry;
 }
 
-int Instance::get_Netsize(){
+int Instance::get_Net_num(){
   return cell_nets.size();
 }
 

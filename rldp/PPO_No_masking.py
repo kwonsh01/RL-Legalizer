@@ -8,12 +8,11 @@ import gc
 import rldp
 import time
 import copy
-import math
 
 #Hyperparameters
-learning_rate = 0.000015 # 0.003 ~ 0.000005
-gamma         = 0.99 # 0.8 ~ 0.9997 in general: 0.99
-lmbda         = 0.975 # 0.9 ~ 1.0
+learning_rate = 0.00002 # 0.003 ~ 0.000005
+gamma         = 0.98 # 0.8 ~ 0.9997 in general: 0.99
+lmbda         = 0.99 # 0.9 ~ 1.0
 eps_clip      = 0.2 # 0.1 ~ 0.3
 K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
@@ -25,8 +24,9 @@ class PPO(nn.Module):
     def __init__(self):
         super(PPO, self).__init__()
         self.data = []
-        self.fc1 = nn.Linear(5, 128)
+        self.fc1 = nn.Linear(8, 128)
         self.fc2 = nn.Linear(128, 128)
+        self.fc3 = nn.Linear(128, 128)
         self.fc_pi = nn.Linear(128, 1)
         self.fc_v = nn.Linear(128, 1)
         self.optimizer = optim.Adam(self.parameters(), lr=learning_rate)
@@ -34,6 +34,7 @@ class PPO(nn.Module):
     def pi(self, x, softmax_dim=0):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
         x = self.fc_pi(x)
         prob = F.softmax(x, dim=softmax_dim)
         return prob
@@ -41,6 +42,7 @@ class PPO(nn.Module):
     def v(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
         v = self.fc_v(x)
         return v
 
@@ -90,7 +92,6 @@ class PPO(nn.Module):
             advantage = torch.tensor(advantage_lst, dtype=torch.float).to(device)
 
             pi = self.pi(s, softmax_dim=1)
-
             pi_a = pi.gather(1,a)
 
             ratio = torch.exp(torch.log(pi_a) - torch.log(prob_a))  # a/b == exp(log(a)-log(b))
@@ -104,7 +105,7 @@ class PPO(nn.Module):
             loss.mean().backward()
             self.optimizer.step()
 
-def read_state_gcell(Cell, rx, ty, rH, stepN):
+def read_state_gcell(Cell, rx, ty, rH, placed_cell_num):
     state = []
     for j in (Cell):
         moveTry = 1.0 if j.moveTry else 0.0
@@ -115,8 +116,8 @@ def read_state_gcell(Cell, rx, ty, rH, stepN):
         width = j.get_Width(rH)
         height = j.get_Height(rH)
         net_num = float(j.get_Net_num())/Gcell_grid_num
-        cells_num = float(Cell.size())/Gcell_grid_num
-        legalized_Gcell = float(stepN)/Gcell_grid_num
+        cells_num = Cell.size()
+        legalized_Gcell = placed_cell_num
         state.append([moveTry, x, y, width, height, net_num, cells_num, legalized_Gcell])
     return state
 
@@ -140,6 +141,8 @@ def main():
         argv = "opendp -lef benchmarks/fft_a_md2/tech.lef -lef benchmarks/fft_a_md2/cells_modified.lef -def benchmarks/fft_a_md2/placed.def -cpu 4 -placement_constraints benchmarks/fft_a_md2/placement.constraints -output_def fft_a_md2_output.def"
     elif(file == 'fft_a_md3'):
         argv = "opendp -lef fft_a_md2/tech.lef -lef benchmarks/fft_a_md3/cells_modified.lef -def benchmarks/fft_a_md3/placed.def -cpu 4 -placement_constraints benchmarks/fft_a_md3/placement.constraints -output_def fft_a_md3_output.def"
+    elif(file == 'pci_bridge32_b_md1'):
+        argv = "opendp -lef benchmarks/pci_bridge32_b_md1/tech.lef -lef benchmarks/pci_bridge32_b_md1/cells_modified.lef -def benchmarks/pci_bridge32_b_md1/placed.def -cpu 4 -placement_constraints benchmarks/pci_bridge32_b_md1/placement.constraints -output_def pci_bridge32_b_md1_out.def"
     elif(file == 'pci_bridge32_b_md2'):
         argv = "opendp -lef benchmarks/pci_bridge32_b_md2/tech.lef -lef benchmarks/pci_bridge32_b_md2/cells_modified.lef -def benchmarks/pci_bridge32_b_md2/placed.def -cpu 4 -placement_constraints benchmarks/pci_bridge32_b_md2/placement.constraints -output_def pci_bridge32_b_md2_out.def"
     elif(file == 'gcd'):
@@ -149,8 +152,9 @@ def main():
     elif(file == 'medium01'):
         argv = "opendp -lef benchmarks/gcd_nangate45/Nangate45_tech.lef -lef benchmarks/gcd_nangate45/Nangate45.lef -def benchmarks/gcd_nangate45/medium01.def -cpu 4 -output_def gcd_nangate45_output.def"
 
-    output = "data/"
+    output = "data_nan/"
 
+    #post placement
     ckt = rldp.RLDP()
     ckt_original = rldp.RLDP()
 
@@ -204,13 +208,13 @@ def main():
         while not done:
             gcell_done = False
             placed_cell_num = 0
-            s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
+            s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH, placed_cell_num)
 
             while not gcell_done:
-            #step
+                #step
                 current_time = time.time()-start
                 print(f'Execute...ing time: {current_time:.3f}[s]')
-            #action
+                #action
                 a_time = time.time()
                 s_List = copy.deepcopy(s)
                 s_List = torch.tensor(s_List, dtype=torch.float).to(device)
@@ -229,17 +233,18 @@ def main():
                 if timeUp:
                     action_list.push_back(Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.id)
 
-            #placement
+                #placement
                 placed = ckt.place_oneCell(Gcell[runtime_Gcell].Gcell_id, a)
-                placed_cell_num = placed_cell_num + 1
+                placed_cell_num += 1
                 stepN += 1
                 inference_time_start += time.time() - a_time
 
-            #reward
-                if placed:
-                    r = rH / (1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
+                #reward
+                if(placed):
+                    r = rH/(1+Cell[Gcell[runtime_Gcell].Gcell_id][a].cell.disp)
                 else:
                     r = -5
+                    # r = rH / (1+ckt.calc_gcell_avg_disp(Gcell[runtime_Gcell].Gcell_id))
 
                 print("\033[31m" + "Episode: " + "\033[0m", n_episode)
                 print("\033[33m" + "reward: " + "\033[0m", r)
@@ -250,27 +255,22 @@ def main():
                 print("\033[32m" + "         runtime_Gcell: ", runtime_Gcell, "\033[0m")
                 print("\033[32m" + "         Gcell_id: ", Gcell[runtime_Gcell].Gcell_id, "\033[0m")
 
-            #cellist reload and state update
-                s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH)
-
+                #cellist reload and state update
+                s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH, placed_cell_num)
                 model.put_data((s, a, r, s_prime, probf[a].item(), done))
-
                 s = s_prime
 
                 score += r
-
                 gcell_done = ckt.calc_Gcell_done(runtime_Gcell)
-
 
             t_time = time.time()
             model.train_net()
             train_time_start += time.time() - t_time
 
             runtime_Gcell += 1
-
             done = ckt.calc_done()
 
-    #episode end
+        #episode end
         score_arr.append(score)
         hpwl_arr.append(ckt.HPWL(""))
         total_epi_time_arr.append(time.time() - epi_time_start)
@@ -285,7 +285,7 @@ def main():
         else:
             n_episode += 1
 
-# SA
+    # SA
     ckt.SA(ckt_original, action_list, Iter)
     ckt_original.copy_delete()
 
@@ -320,7 +320,7 @@ if __name__ == '__main__':
     if is_cuda:
         gc.collect()
         torch.cuda.empty_cache()
-        device = torch.device("cuda:1")
+        device = torch.device("cuda:0")
         print("GPU is available")
     else:
         device = torch.device("cpu")

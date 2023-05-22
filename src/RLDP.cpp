@@ -429,28 +429,28 @@ bool RLDP::place_oneCell(int gcell_id, int cell_idx) {
     if(!map_move(thecell, "init_coord")) {
       if(!shift_move(thecell, "init_coord")) {
         success = false;
-        cout << thecell->name << " -> move failed!" << endl;
       }
     }
   }
   thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
-  cout << Gcell_cell_list[gcell_id][cell_idx]->cell->id << "'s cell_placement done .. " << endl;
-  // cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
+//  cout << Gcell_cell_list[gcell_id][cell_idx]->cell->id << "'s cell_placement done .. " << endl;
+//   cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
   return success;
 }
 
-void RLDP::place_oneCell(int cell_idx) {
+bool RLDP::place_oneCell(int cell_idx) {
+  bool success = true;
   cell* thecell = &this->cells[cell_idx];
 
   if(!thecell->isPlaced){
     if(!map_move(thecell, "init_coord")) {
       if(!shift_move(thecell, "init_coord")) {
-        cout << thecell->name << " -> move failed!" << endl;
+        success = false;
       }
     }
     thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
   }
-
+  return success;
 }
 
 double RLDP::calc_HPWL() {
@@ -645,8 +645,18 @@ void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter) {
     action_list[i] = action_list[j];
     action_list[j] = temp;
 
+    bool fail = false;
     for(int a : action_list){
-      this->place_oneCell(a);
+      if(!this->place_oneCell(a)){
+          fail = true;
+          break;
+      }
+    }
+    if(fail){
+      temp = action_list[i];
+      action_list[i] = action_list[j];
+      action_list[j] = temp;
+      continue;
     }
 
     after_hpwl = this->calc_HPWL();
@@ -662,9 +672,7 @@ void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter) {
         after_hpwl = before_hpwl;
       }
     }
-
-    if(temp_rand > 0.01)
-      temp_rand -= 0.01;
+    temp_rand *= 0.975;
   }
   this->calc_density_factor(4);
   this->evaluation();

@@ -43,7 +43,7 @@ namespace RL_LEGALIZER{
     bool placement_fail;
     int total_cell;
     int Gcell_grid;
-    std::vector<truffle> Gcell_density;
+    std::vector< truffle > Gcell_density;
     std::vector< Instance > cell_list;
     std::vector< std::vector<Instance*> > Gcell_cell_list;
    public:
@@ -62,7 +62,7 @@ namespace RL_LEGALIZER{
 
     void pre_placement();
     bool place_oneCell(int runtime_gcell, int cell_idx);
-    void place_oneCell(int cell_idx);
+    bool place_oneCell(int cell_idx);
 
     double calc_HPWL();
     double calc_HPWL(int gcell_id, int cell_idx);

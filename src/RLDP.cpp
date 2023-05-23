@@ -22,7 +22,7 @@ bool Gcell_density_order(truffle &a, truffle &b) {
     return false;
 }
 
-RLDP::RLDP() : placed_cell(0), placed_Gcell(0), placement_fail(false), total_cell(0), Gcell_grid(1), opendp::circuit() {}
+RLDP::RLDP() : mark_grid(NULL), placed_cell(0), placed_Gcell(0), placement_fail(false), total_cell(0), Gcell_grid(1), opendp::circuit() {}
 
 void RLDP::read_files(string argv, int Gcell_grid_num) {
   Gcell_grid = Gcell_grid_num;
@@ -146,9 +146,15 @@ void RLDP::read_files(string argv, int Gcell_grid_num) {
   // construct pixel grid
   int row_num = ty / rowHeight;
   int col = rx / wsite;
+
   grid = new pixel*[row_num];
   for(int i = 0; i < row_num; i++) {
     grid[i] = new pixel[col];
+  }
+
+  this->mark_grid = new Instance**[row_num];
+  for(int i = 0; i < row_num; i++) {
+    this->mark_grid[i] = new Instance*[col];
   }
 
   for(int i = 0; i < row_num; i++) {
@@ -158,6 +164,7 @@ void RLDP::read_files(string argv, int Gcell_grid_num) {
       grid[i][j].x_pos = j;
       grid[i][j].linked_cell = NULL;
       grid[i][j].isValid = false;
+      mark_grid[i][j] = NULL;
     }
   }
 
@@ -169,10 +176,6 @@ void RLDP::read_files(string argv, int Gcell_grid_num) {
     int x_end = x_start + curFragRow.numSites;
     int y_end = y_start + 1;
 
-//    cout << "x_start: " << x_start << endl;
-//    cout << "y_start: " << y_start << endl;
-//    cout << "x_end: " << x_end << endl;
-//    cout << "y_end: " << y_end << endl;
     for(int i=x_start; i<x_end; i++) {
       for(int j=y_start; j<y_end; j++) {
         grid[j][i].isValid = true;
@@ -259,6 +262,48 @@ void RLDP::copy_delete() {
   delete[] this->grid;
 }
 
+void RLDP::mark_grid_assign(std::vector< Instance* >& cells){
+  for(Instance* theCell : cells){
+    int x, y;
+    if(theCell->moveTry){
+      x = (int)floor(theCell->cell->x_coord / this->wsite);
+      y = (int)floor(theCell->cell->y_coord / this->rowHeight);
+    }
+    else{
+      x = (int)floor(theCell->cell->init_x_coord / this->wsite);
+      y = (int)floor(theCell->cell->init_y_coord / this->rowHeight);
+    }
+
+    int x_rf = (int)floor(this->lx / this->wsite);
+    int y_rf = (int)floor(this->by / this->rowHeight);
+
+    x = std::max(x, x_rf);
+    y = std::max(y, y_rf);
+
+    this->mark_grid[y][x] = theCell;
+  }
+}
+
+void RLDP::erase_grid_assign(Instance* cells){
+  int x, y;
+  if(cells->moveTry){
+    x = (int)floor(cells->cell->x_coord / this->wsite);
+    y = (int)floor(cells->cell->y_coord / this->rowHeight);
+  }
+  else{
+    x = (int)floor(cells->cell->init_x_coord / this->wsite);
+    y = (int)floor(cells->cell->init_y_coord / this->rowHeight);
+  }
+
+  int x_rf = (int)floor(lx / wsite);
+  int y_rf = (int)floor(by / rowHeight);
+
+  x = std::max(x, x_rf);
+  y = std::max(y, y_rf);
+
+  this->mark_grid[y][x] = NULL;
+}
+
 void RLDP::Cell_init() {
   int x, y, gcell_id;
   int row = int(this->ty) / Gcell_grid;
@@ -285,14 +330,14 @@ void RLDP::net_assign_to_cell() {
     net* theNet = &nets[i];
     pin* source = &pins[theNet->source];
 
-    // cout << "net number: "<< i << endl << source->owner << endl;
+//     cout << "net number: "<< i << endl << source->owner << endl;
     if(source->owner >= 0 && source->owner < cell_list.size()){
       cell_list[source->owner].cell_nets.push_back(theNet);
     }
 
     for(int j = 0; j < theNet->sinks.size(); j++) {
       pin* sink = &pins[theNet->sinks[j]];
-      // cout << "net sink number: "<< j << endl << sink->owner << endl;
+//       cout << "net sink number: "<< j << endl << sink->owner << endl;
       if(sink->owner >= 0 && sink->owner < cell_list.size()){
         cell_list[sink->owner].cell_nets.push_back(theNet);
       }
@@ -300,18 +345,22 @@ void RLDP::net_assign_to_cell() {
   }
 }
 
-vector< vector<Instance*> >& RLDP::get_Cell() {
+vector< vector< Instance* > >& RLDP::get_Cell() {
   this->Cell_init();
   this->net_assign_to_cell();
 
   for(int i = 0; i < Gcell_grid * Gcell_grid; i++){
-    vector<Instance*> temp;
+    vector< Instance* > temp;
     Gcell_cell_list.push_back(temp);
   }
 
   for(Instance& instance : cell_list) {
     if(instance.cell->isFixed || instance.cell->inGroup || instance.cell->isPlaced) continue;
     Gcell_cell_list[instance.Gcell_id].push_back(&instance);
+  }
+
+  for(vector< Instance* > a : Gcell_cell_list){
+    mark_grid_assign(a);
   }
 
   return Gcell_cell_list;
@@ -381,16 +430,16 @@ std::vector<truffle> RLDP::get_Gcell() {
 
 void RLDP::pre_placement() {
   if(groups.size() > 0) {
-    // group_cell -> region assign
+//     group_cell -> region assign
     group_cell_region_assign();
 //    cout << " group_cell_region_assign done .." << endl;
   }
-  // non group cell -> sub region gen & assign
+//   non group cell -> sub region gen & assign
   non_group_cell_region_assign();
 //  cout << " non_group_cell_region_assign done .." << endl;
 //  cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
 
-  // pre placement out border ( Need region assign function previously )
+//   pre placement out border ( Need region assign function previously )
   if(groups.size() > 0) {
     group_cell_pre_placement();
 //    cout << " group_cell_pre_placement done .." << endl;
@@ -399,7 +448,7 @@ void RLDP::pre_placement() {
 //    cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
   }
 
-  // naive method placement ( Multi -> single )
+//   naive method placement ( Multi -> single )
   if(groups.size() > 0) {
     group_cell_placement("init_coord");
     cout << " group_cell_placement done .. " << endl;
@@ -427,14 +476,16 @@ bool RLDP::place_oneCell(int gcell_id, int cell_idx) {
 
   if(!thecell->isPlaced){
     if(!map_move(thecell, "init_coord")) {
-      if(!shift_move(thecell, "init_coord")) {
-        success = false;
-      }
+      success = false;
     }
   }
+  std::vector< Instance* >temp;
+  temp.push_back(theinstance);
+
+  erase_grid_assign(theinstance);
+  mark_grid_assign(temp);
+
   thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
-//  cout << Gcell_cell_list[gcell_id][cell_idx]->cell->id << "'s cell_placement done .. " << endl;
-//   cout << " - - - - - - - - - - - - - - - - - - - - - - - - " << endl;
   return success;
 }
 
@@ -444,9 +495,7 @@ bool RLDP::place_oneCell(int cell_idx) {
 
   if(!thecell->isPlaced){
     if(!map_move(thecell, "init_coord")) {
-      if(!shift_move(thecell, "init_coord")) {
-        success = false;
-      }
+      success = false;
     }
     thecell->disp = abs(thecell->init_x_coord - thecell->x_coord) + abs(thecell->init_y_coord - thecell->y_coord);
   }
@@ -648,8 +697,8 @@ void RLDP::SA(const RLDP& copied, std::vector<int> action_list, int Iter) {
     bool fail = false;
     for(int a : action_list){
       if(!this->place_oneCell(a)){
-          fail = true;
-          break;
+        fail = true;
+        break;
       }
     }
     if(fail){

@@ -55,10 +55,12 @@ for i in Cell:
     print()
     print("\033[32m", x,  "\033[0m", "'s Gcell size: ", i.size())
     x += 1
-for j in i:
-    a = '%-10s' % str(j.cell.id)
-    b = '%-10s' % str(j.Gcell_id)
-    print("    Cell_id: ", a, "Gcell_id: ", b, "Height: ", j.cell.height/rH)
+    for j in i:
+        a = '%-10s' % str(j.cell.id)
+        b = '%-5s' % str(j.Gcell_id)
+        c = '%-10s' % str(j.cell.name)
+        print("    Cell_id: ", a, "Cell_name: ", c, "Gcell_id: ", b, "Height: ", j.cell.height/rH, end="   ")
+        print("Near_cells: ", j.get_Nearcell_num(ckt))
 
 # print()
 # print("Gcell size: ", Gcell.size())

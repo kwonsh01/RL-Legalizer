@@ -9,15 +9,15 @@ import rldp
 import time
 
 #Hyperparameters
-learning_rate = 0.0000075 # 0.003 ~ 0.000005
+learning_rate = 0.000025 # 0.003 ~ 0.000005
 gamma         = 0.99 # 0.8 ~ 0.9997 in general: 0.99
-lmbda         = 0.95 # 0.9 ~ 1.0
+lmbda         = 0.99 # 0.9 ~ 1.0
 eps_clip      = 0.2 # 0.1 ~ 0.3
-K_epoch       = 10 # 3 ~ 30
+K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
 
 Gcell_grid_num = 3
-Iter = 150
+Iter = 0
 
 class PPO(nn.Module):
     def __init__(self):
@@ -112,7 +112,6 @@ class PPO(nn.Module):
 def read_state_gcell(Cell, rx, ty, rH, placed_cell_num):
     state = []
     total_gcell = Cell.size()
-    placement_ratio = placed_cell_num/total_gcell
     for j in (Cell):
         moveTry = 1.0 if j.moveTry else 0.0
         # x = j.get_GcellXcoord(Gcell_grid_num, rx)
@@ -122,7 +121,7 @@ def read_state_gcell(Cell, rx, ty, rH, placed_cell_num):
         width = j.get_Width(rH)
         height = j.get_Height(rH)
         net_num = j.get_Net_num() # pin num
-        state.append([moveTry, x, y, width, height, net_num, placement_ratio, total_gcell])
+        state.append([moveTry, x, y, width, height, net_num, total_gcell, placed_cell_num])
     return state
 
 def main():
@@ -225,7 +224,7 @@ def main():
                 print(f'Execute...ing time: {current_time:.3f}[s]')
                 #action
                 a_time = time.time()
-                s_List = copy.deepcopy(s)
+                s_List = s[:]
                 s_List = torch.tensor(s_List, dtype=torch.float).to(device)
 
                 prob = model.pi(s_List)

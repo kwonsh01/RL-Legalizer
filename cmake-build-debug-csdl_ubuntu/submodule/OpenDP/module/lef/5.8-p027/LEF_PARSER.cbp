@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="LEF_PARSER"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\submodule\;CMake Files\submodule\OpenDP\;CMake Files\submodule\OpenDP\module\;CMake Files\submodule\OpenDP\module\def\;CMake Files\submodule\OpenDP\module\def\5.8-p027\;CMake Files\submodule\OpenDP\module\lef\;CMake Files\submodule\OpenDP\module\lef\5.8-p027\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="LefBisonTarget">
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 LefBisonTarget"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lef">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/liblef.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 lef"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lef/fast">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/liblef.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 lef/fast"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lefzlib">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/liblefzlib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 lefzlib"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="lefzlib/fast">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/liblefzlib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 lefzlib/fast"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clef">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/libclef.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clef"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clef/fast">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/libclef.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clef/fast"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clefzlib">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/libclefzlib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clefzlib"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clefzlib"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="clefzlib/fast">
+				<Option output="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lib/libclefzlib.a" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027"/>
+				<Option object_output="./"/>
+				<Option type="2"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef"/>
+					<Add directory="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clefzlib"/>
+					<Add directory="/usr/include/c++/9"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/9"/>
+					<Add directory="/usr/include/c++/9/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/9/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clefzlib/fast"/>
+					<CompileFile command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j56 -f &quot;/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/cmake-build-debug-csdl_ubuntu/submodule/OpenDP/module/lef/5.8-p027/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/lefiEncryptExt.c">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/lefiTBInt.c">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiArray.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiCrossTalk.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiDebug.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiEncryptInt.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiLayer.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiMacro.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiMisc.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiNonDefault.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiProp.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiPropType.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiUnits.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiUtil.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiVia.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefiViaRule.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefrReader.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefwWriter.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clef/xlefwWriterCalls.cpp">
+			<Option target="clef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/clefzlib/clefzlib.c">
+			<Option target="clefzlib"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/crypt.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/crypt.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lef.tab.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lef.tab.cpp.rule">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lef_keywords.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiArray.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiArray.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiCrossTalk.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiCrossTalk.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiDebug.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiDebug.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiEncryptInt.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiEncryptInt.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiLayer.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiLayer.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiMacro.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiMacro.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiMisc.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiMisc.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiNonDefault.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiNonDefault.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiProp.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiProp.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiPropType.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiPropType.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiTBExt.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiUnits.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiUnits.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiVia.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiVia.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiViaRule.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefiViaRule.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrCallbacks.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrData.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrData.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrReader.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrReader.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrSettings.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefrSettings.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefwWriter.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefwWriter.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefwWriterCalls.cpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lef/lefwWriterCalls.hpp">
+			<Option target="lef"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib/lefzlib.cpp">
+			<Option target="lefzlib"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/lefzlib/lefzlib.hpp">
+			<Option target="lefzlib"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\submodule\OpenDP\"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\submodule\OpenDP\module\def\5.8-p027\"/>
+		</Unit>
+		<Unit filename="/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/lef/5.8-p027/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\submodule\OpenDP\module\lef\5.8-p027\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

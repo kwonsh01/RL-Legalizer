@@ -1,0 +1,153 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/lib/libcdefzlib.a"
+		}
+	],
+	"backtrace" : 1,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"install",
+			"add_dependencies",
+			"add_compile_options",
+			"target_include_directories"
+		],
+		"files" : 
+		[
+			"submodule/OpenDP/module/def/5.8-p027/CMakeLists.txt",
+			"CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 188,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 255,
+				"parent" : 0
+			},
+			{
+				"command" : 2,
+				"file" : 0,
+				"line" : 249,
+				"parent" : 0
+			},
+			{
+				"file" : 1
+			},
+			{
+				"command" : 3,
+				"file" : 1,
+				"line" : 9,
+				"parent" : 4
+			},
+			{
+				"command" : 4,
+				"file" : 0,
+				"line" : 238,
+				"parent" : 0
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-g -fdiagnostics-color=always"
+				},
+				{
+					"backtrace" : 5,
+					"fragment" : "-fPIC"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 6,
+					"path" : "/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/def"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/defzlib"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/cdef"
+				},
+				{
+					"backtrace" : 6,
+					"path" : "/home/shkwon_ug/tmp/tmp.eyv3ldFFuv/submodule/OpenDP/module/def/5.8-p027/cdefzlib"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 3,
+			"id" : "cdef::@2e12e4e7d268e9fade88"
+		}
+	],
+	"id" : "cdefzlib::@2e12e4e7d268e9fade88",
+	"install" : 
+	{
+		"destinations" : 
+		[
+			{
+				"backtrace" : 2,
+				"path" : "lib"
+			}
+		],
+		"prefix" : 
+		{
+			"path" : "/usr/local"
+		}
+	},
+	"name" : "cdefzlib",
+	"nameOnDisk" : "libcdefzlib.a",
+	"paths" : 
+	{
+		"build" : "submodule/OpenDP/module/def/5.8-p027",
+		"source" : "submodule/OpenDP/module/def/5.8-p027"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "submodule/OpenDP/module/def/5.8-p027/cdefzlib/cdefzlib.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

@@ -9,21 +9,57 @@ import rldp
 import time
 
 #Hyperparameters
-learning_rate = 0.000025 # 0.003 ~ 0.000005
+learning_rate = 0.00002 # 0.003 ~ 0.000005
 gamma         = 0.99 # 0.8 ~ 0.9997 in general: 0.99
-lmbda         = 0.99 # 0.9 ~ 1.0
+lmbda         = 0.95 # 0.9 ~ 1.0
 eps_clip      = 0.2 # 0.1 ~ 0.3
 K_epoch       = 15 # 3 ~ 30
 T_horizon     = 50 # 32 ~ 5000
 
 Gcell_grid_num = 3
 Iter = 0
+minEpi = 100000
+
+class EarlyStopping:
+    def __init__(self, patience=20, verbose=False, delta_disp = 0, path='checkpoint.pt'):
+        self.patience = patience
+        self.verbose = verbose
+        self.counter = 0
+        self.best_score = None
+        self.best_disp = None
+        self.early_stop = False
+        self.disp_min = 10000
+        self.avg_disp = 10000
+        self.delta_disp = delta_disp
+        self.path = path
+
+    def __call__(self, disp, avg_disp, model):
+        if self.best_score is None and self.best_disp is None:
+            self.best_disp = disp
+            self.save_checkpoint(disp, avg_disp, model)
+        elif (disp > self.best_disp - self.delta_disp and avg_disp > self.avg_disp - self.delta_disp):
+            self.counter += 1
+            print(f'EarlyStopping counter: {self.counter} out of {self.patience}')
+            if self.counter >= self.patience:
+                self.early_stop = True
+        else:
+            self.best_disp = disp
+            self.avg_disp = avg_disp
+            self.save_checkpoint(disp, avg_disp, model)
+            self.counter = 0
+
+    def save_checkpoint(self, disp, avg_disp, model):
+        if self.verbose:
+            print(f'Disp decresed({self.disp_min:.6f} --> {disp:.6f}).  Saving model ...')
+        torch.save(model.state_dict(), self.path)
+        self.disp_min = disp
+        self.avg_disp = avg_disp
 
 class PPO(nn.Module):
     def __init__(self):
         super(PPO, self).__init__()
         self.data = []
-        self.fc1 = nn.Linear(8, 256)
+        self.fc1 = nn.Linear(9, 256)
         self.fc2 = nn.Linear(256, 256)
         self.fc3 = nn.Linear(256, 256)
         self.fc4 = nn.Linear(256, 256)
@@ -109,7 +145,7 @@ class PPO(nn.Module):
             loss.mean().backward()
             self.optimizer.step()
 
-def read_state_gcell(Cell, rx, ty, rH, placed_cell_num):
+def read_state_gcell(Cell, rx, ty, rH, placed_cell_num, ckt):
     state = []
     total_gcell = Cell.size()
     for j in (Cell):
@@ -121,7 +157,8 @@ def read_state_gcell(Cell, rx, ty, rH, placed_cell_num):
         width = j.get_Width(rH)
         height = j.get_Height(rH)
         net_num = j.get_Net_num()
-        state.append([moveTry, x, y, width, height, net_num, total_gcell, placed_cell_num])
+        near_cell = j.get_Nearcell_num(ckt)
+        state.append([moveTry, x, y, width, height, net_num, near_cell, total_gcell, placed_cell_num])
     return state
 
 def main():
@@ -132,6 +169,8 @@ def main():
     print("===========================================================================")
 
     file = 'nangate45'
+    # file = 'des_perf_a_md1'
+    # file = 'fft_2_md2'
     if(file == 'nangate45'):
         argv = "opendp -lef benchmarks/gcd_nangate45/Nangate45_tech.lef -lef benchmarks/gcd_nangate45/Nangate45.lef -def benchmarks/gcd_nangate45/gcd_nangate45_global_place.def -cpu 4 -output_def gcd_nangate45_output.def"
     elif(file == 'des_perf_a_md1'):
@@ -156,11 +195,12 @@ def main():
         argv = "opendp -lef benchmarks/gcd_nangate45/Nangate45_tech.lef -lef benchmarks/gcd_nangate45/Nangate45.lef -def benchmarks/gcd_nangate45/medium01.def -cpu 4 -output_def gcd_nangate45_output.def"
 
     output = "data/"
+    # output = "data_des/"
+    # output = "data_fft/"
 
     model = PPO().to(device)
     load = input("Load model? [y/n]")
     if(load == 'y'):
-        # path = input("Model path?")
         checkpoint = torch.load('data/checkpoint.pt')
         model.load_state_dict(checkpoint)
 
@@ -191,6 +231,7 @@ def main():
     avg_disp_arr = []
     inference_time_arr = []
     train_time_arr = []
+    early_stopping = EarlyStopping(patience = 20, verbose = True)
 
     n_episode = 1
     howLong = int(input("How Long? (min)"))
@@ -216,7 +257,7 @@ def main():
         while not done:
             gcell_done = False
             placed_cell_num = 0
-            s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH, placed_cell_num)
+            s = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH, placed_cell_num, ckt)
 
             while not gcell_done:
                 #step
@@ -261,7 +302,7 @@ def main():
                 print("\033[32m" + "         total_cell_num: ", total_cell, "\033[0m")
 
                 #cellist reload and state update
-                s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH, placed_cell_num)
+                s_prime = read_state_gcell(Cell[Gcell[runtime_Gcell].Gcell_id], rx, ty, rH, placed_cell_num, ckt)
                 model.put_data((s, a, r, s_prime, probf[a].item(), done))
                 s = s_prime
 
@@ -283,12 +324,23 @@ def main():
         train_time_arr.append(train_time_start)
         avg_disp_arr.append(ckt.calc_avg_disp())
 
+        if(n_episode >= minEpi):
+            avgDisp = 0
+            for i in range(minEpi):
+                avgDisp += avg_disp_arr[n_episode - 1 - i]
+
+            avgDisp = avgDisp / minEpi
+
+            early_stopping(avg_disp_arr[n_episode - 1], avgDisp, model)
+
         if timeUp:
             END = True
+        elif(early_stopping.early_stop):
+            timeUp = True
         elif(time.time() - start) > howLong * 60:
             timeUp = True
-        else:
-            n_episode += 1
+
+        n_episode += 1
 
     # SA
     ckt.SA(ckt_original, action_list, Iter)

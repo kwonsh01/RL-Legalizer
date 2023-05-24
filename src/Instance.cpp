@@ -76,10 +76,10 @@ int Instance::get_Nearcell_num(RLDP& ckt){
   int y = this->moveTry ? this->cell->y_coord : this->cell->init_y_coord;
 
   rect theRect;
-  theRect.xLL = std::max(ckt.die.xLL, x - this->cell->width * 3);
-  theRect.xUR = std::min(ckt.die.xUR, x + this->cell->width * 3);
-  theRect.yLL = std::max(ckt.die.yLL, y - this->cell->height * 3);
-  theRect.yUR = std::min(ckt.die.yUR, y + this->cell->height * 3);
+  theRect.xLL = std::max(ckt.die.xLL, x - this->cell->width * 2);
+  theRect.xUR = std::min(ckt.die.xUR, x + this->cell->width * 2);
+  theRect.yLL = std::max(ckt.die.yLL, y - this->cell->height * 2);
+  theRect.yUR = std::min(ckt.die.yUR, y + this->cell->height * 2);
 
   int x_start = (int)floor(theRect.xLL / ckt.wsite + 0.5);
   int y_start = (int)floor(theRect.yLL / ckt.rowHeight + 0.5);

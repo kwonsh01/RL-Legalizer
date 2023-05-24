@@ -120,7 +120,7 @@ def read_state_gcell(Cell, rx, ty, rH, placed_cell_num):
         y = j.get_Ycoord(ty)
         width = j.get_Width(rH)
         height = j.get_Height(rH)
-        net_num = j.get_Net_num() # pin num
+        net_num = j.get_Net_num()
         state.append([moveTry, x, y, width, height, net_num, total_gcell, placed_cell_num])
     return state
 
